@@ -8,6 +8,7 @@ import sys
 import time
 import numpy
 import readline
+import traceback
 
 
 DELIMITER = ','
@@ -132,5 +133,6 @@ while True:
     except:
         if (sys.exc_info()[0] == SystemExit):
             break;
-        print("ERRR:", sys.exc_info())
+        #print("ERRR:", sys.exc_info())
+        traceback.print_exc()
 
