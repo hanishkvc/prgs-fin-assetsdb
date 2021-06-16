@@ -112,6 +112,7 @@ def list_stocks(db, filterStocks=[], bDetails=False):
     totalSum = numpy.sum(db[:,IDBSTOCKTRANSVALUE])
     totalQty = numpy.sum(db[:,IDBSTOCKQTY])
     stockNames = list_stocknames(db, False)
+    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
         stocks = db[db[:,1] == sn]
         stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
