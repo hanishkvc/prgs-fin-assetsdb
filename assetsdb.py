@@ -38,7 +38,7 @@ def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
     return tA
 
 
-def handle_asset(la):
+def _handle_asset_csv_o1(la):
     tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
     tSymbol = la[2]
     tTotal = float(la[3].replace(",",""))
@@ -69,7 +69,7 @@ def import_csv_o1(sFile, db=None):
         try:
             if la[2][0].strip().startswith("#"):
                 continue
-            la = handle_asset(la)
+            la = _handle_asset_csv_o1(la)
             print("INFO:ImportCSVO1:", la)
             if (type(db) == type(None)):
                 db = numpy.array(la)
