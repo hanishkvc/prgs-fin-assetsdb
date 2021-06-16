@@ -37,6 +37,16 @@ def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
     return tA
 
 
+def handle_asset(la):
+    tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
+    tSymbol = la[2]
+    tTotal = float(la[3].replace(",",""))
+    tValue = float(la[4].replace(",", ""))
+    tQty = int(la[5].replace(",", ""))
+    if (tTotal != (tValue*tQty)):
+        print("DBUG:ImportCSVO1:TotalValue mismatch", la)
+
+
 def import_csv_o1(sFile):
     """
     Assume that the specified file is a csv file following my previous google sheets assets csv exports
@@ -55,13 +65,9 @@ def import_csv_o1(sFile):
         if not la[1][0].isnumeric():
             continue
         try:
-            tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
-            tSymbol = la[2]
-            tTotal = float(la[3].replace(",",""))
-            tValue = float(la[4].replace(",", ""))
-            tQty = int(la[5].replace(",", ""))
-            if (tTotal != (tValue*tQty)):
-                print("DBUG:ImportCSVO1:TotalValue mismatch", la)
+            if la[2][0].strip().startswith("#"):
+                continue
+            handle_asset(la)
         except:
             print("ERRR:ImportCSVO1:converting line 2 csv", la)
             print(sys.exc_info())
