@@ -47,7 +47,7 @@ def handle_asset(la):
         print("DBUG:ImportCSVO1:TotalValue mismatch", la)
 
 
-def import_csv_o1(sFile):
+def import_csv_o1(sFile, db=None):
     """
     Assume that the specified file is a csv file following my previous google sheets assets csv exports
     Skip the 1st line
@@ -72,7 +72,16 @@ def import_csv_o1(sFile):
             print("ERRR:ImportCSVO1:converting line 2 csv", la)
             print(sys.exc_info())
         print(la)
+        if (db == None):
+            db = numpy.array(la)
+        else:
+            db = numpy.vstack((db, la))
+        return db
 
 
-import_csv_o1(sys.argv[1])
+while True:
+    try:
+        eval(input("$"))
+    except:
+        print("ERRR:", sys.exc_info())
 
