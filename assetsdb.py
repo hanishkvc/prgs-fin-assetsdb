@@ -5,6 +5,7 @@
 
 
 import sys
+import time
 import numpy
 
 
@@ -46,13 +47,24 @@ def import_csv_o1(sFile):
     breakpoint()
     for l in f:
         la = csv2list(l)
-        print("DBUG:", la)
+        #print("DBUG:ImportCSVO1:CurLine:", la)
         if len(la) < 4:
             continue
         if len(la[1]) < 8:
             continue
         if not la[1][0].isnumeric():
             continue
+        try:
+            tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
+            tSymbol = la[2]
+            tTotal = float(la[3])
+            tValue = float(la[4])
+            tQty = int(la[5])
+            if (tTotal != (tValue*tQty)):
+                print("DBUG:ImportCSVO1:TotalValue mismatch", la)
+        except:
+            print("ERRR:ImportCSVO1:converting line 2 csv", la)
+            print(sys.exc_info())
         print(la)
 
 
