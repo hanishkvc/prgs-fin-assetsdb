@@ -77,7 +77,7 @@ def import_csv_o1(sFile, db=None):
             db = numpy.array(la)
         else:
             db = numpy.vstack((db, la))
-        return db
+    return db
 
 
 while True:
