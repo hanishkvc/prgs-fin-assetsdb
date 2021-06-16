@@ -87,8 +87,8 @@ def import_csv_o1(sFile, db=None):
             else:
                 db = numpy.vstack((db, la))
         except:
-            print("ERRR:ImportCSVO1:", la)
             print(sys.exc_info())
+            input("ERRR:ImportCSVO1:{}".format(la))
     return db
 
 
