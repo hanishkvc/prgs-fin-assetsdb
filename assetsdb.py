@@ -57,9 +57,9 @@ def import_csv_o1(sFile):
         try:
             tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
             tSymbol = la[2]
-            tTotal = float(la[3])
-            tValue = float(la[4])
-            tQty = int(la[5])
+            tTotal = float(la[3].replace(",",""))
+            tValue = float(la[4].replace(",", ""))
+            tQty = int(la[5].replace(",", ""))
             if (tTotal != (tValue*tQty)):
                 print("DBUG:ImportCSVO1:TotalValue mismatch", la)
         except:
