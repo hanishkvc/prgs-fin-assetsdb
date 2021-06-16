@@ -86,14 +86,16 @@ def import_csv_o1(sFile, db=None):
     return db
 
 
-def list_stocknames(db):
+def list_stocknames(db, bPrint=True):
     """
-    List the name of stocks in the db.
+    Retrieve and optionally print the name of stocks in the db.
     db: the db containing the stocks data.
     """
     stockNames = numpy.unique(db[:,IDBSTOCKNAME])
-    for sn in stockNames:
-        print(sn)
+    for i in range(len(stockNames)):
+        sn = stockNames[i]
+        if (bPrint):
+            print("{:4}: {}".format(i,sn))
     return stockNames
 
 
@@ -103,7 +105,7 @@ def list_stocks(db, filterStocks=[]):
     db: the db containing data about stocks
     filterStocks: a list of stock names or empty list.
     """
-    stockNames = list_stocknames(db)
+    stockNames = list_stocknames(db, False)
     for sn in stockNames:
         stocks = db[db[:,1] == sn]
         for s in stocks:
