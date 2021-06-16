@@ -46,6 +46,7 @@ def handle_asset(la):
     tQty = int(la[5].replace(",", ""))
     if (tTotal != (tValue*tQty)):
         print("DBUG:ImportCSVO1:TotalValue mismatch", la)
+    return [ tDate, tSymbol, tValue, tQty, tTotal ]
 
 
 def import_csv_o1(sFile, db=None):
@@ -55,7 +56,7 @@ def import_csv_o1(sFile, db=None):
     """
     f = open(sFile)
     f.readline()
-    breakpoint()
+    #breakpoint()
     for l in f:
         la = csv2list(l)
         #print("DBUG:ImportCSVO1:CurLine:", la)
@@ -68,15 +69,15 @@ def import_csv_o1(sFile, db=None):
         try:
             if la[2][0].strip().startswith("#"):
                 continue
-            handle_asset(la)
+            la = handle_asset(la)
+            print("INFO:ImportCSVO1:", la)
+            if (db == None):
+                db = numpy.array(la)
+            else:
+                db = numpy.vstack((db, la))
         except:
-            print("ERRR:ImportCSVO1:converting line 2 csv", la)
+            print("ERRR:ImportCSVO1:", la)
             print(sys.exc_info())
-        print(la)
-        if (db == None):
-            db = numpy.array(la)
-        else:
-            db = numpy.vstack((db, la))
     return db
 
 
