@@ -8,6 +8,7 @@ import sys
 import time
 import numpy
 import readline
+import rlcompleter
 import traceback
 
 
@@ -113,7 +114,7 @@ def list_stocks(db, filterStocks=[], bDetails=False):
     totalSum = numpy.sum(db[:,IDBSTOCKTRANSVALUE])
     totalQty = numpy.sum(db[:,IDBSTOCKQTY])
     stockNames = list_stocknames(db, False)
-    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16}".format(len(stockNames), totalQty, totalSum))
+    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
         if (len(filterStocks) > 0) and (sn not in filterStocks):
             continue
@@ -123,16 +124,33 @@ def list_stocks(db, filterStocks=[], bDetails=False):
         stockAvg = numpy.mean(stocks[:,IDBSTOCKVALUE])
         if bDetails:
             for s in stocks:
-                print(s)
-        print("{:32} : {:16} {:8} : {:16}".format(sn, stockAvg, stockQty, stockSum))
+                t = s.copy()
+                t[IDBSTOCKTRANSDATE] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCKTRANSDATE])
+                print(t)
+        print("{:32} : {:10.2f} : {:8} : {:16.2f}".format(sn, stockAvg, stockQty, stockSum))
 
 
-while True:
-    try:
-        exec(input("$"))
-    except:
-        if (sys.exc_info()[0] == SystemExit):
-            break;
-        #print("ERRR:", sys.exc_info())
-        traceback.print_exc()
+def startup_message():
+    print("INFO: AssetsDB")
+    print("NOTE: sys.exit() to quit")
+
+
+def startup():
+    readline.parse_and_bind("tab: complete")
+    startup_message()
+
+
+def runme():
+    while True:
+        try:
+            exec(input("$"))
+        except:
+            if (sys.exc_info()[0] == SystemExit):
+                break;
+            #print("ERRR:", sys.exc_info())
+            traceback.print_exc()
+
+
+startup()
+runme()
 
