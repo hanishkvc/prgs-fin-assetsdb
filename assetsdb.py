@@ -13,7 +13,11 @@ import readline
 DELIMITER = ','
 TOKENPROTECTORS = [ "'", '"' ]
 
+IDBSTOCKTRANSDATE = 0
 IDBSTOCKNAME = 1
+IDBSTOCKVALUE = 2
+IDBSTOCKQTY = 3
+IDBSTOCKTRANSVALUE = 4
 
 
 def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
@@ -99,19 +103,26 @@ def list_stocknames(db, bPrint=True):
     return stockNames
 
 
-def list_stocks(db, filterStocks=[]):
+def list_stocks(db, filterStocks=[], bDetails=False):
     """
     List the data about specified stocks in the db.
     db: the db containing data about stocks
     filterStocks: a list of stock names or empty list.
     """
+    totalSum = numpy.sum(db[:,IDBSTOCKTRANSVALUE])
+    totalQty = numpy.sum(db[:,IDBSTOCKQTY])
     stockNames = list_stocknames(db, False)
     for sn in stockNames:
         stocks = db[db[:,1] == sn]
+        stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
+        stockQty = numpy.sum(stocks[:,IDBSTOCKQTY])
+        stockAvg = numpy.average(stocks[:,IDBSTOCKVALUE])
         for s in stocks:
             if (len(filterStocks) > 0) and (s not in filterStocks):
                 continue
-            print(s)
+            if bDetails:
+                print(s)
+        print("{:32} : {:16} {:8} : {:16}".format(sn, stockAvg, stockQty, stockSum))
 
 
 while True:
