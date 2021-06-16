@@ -121,13 +121,13 @@ def list_stocks(db, filterStocks=[], bDetails=False):
         stocks = db[db[:,IDBSTOCKNAME] == sn]
         stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
         stockQty = numpy.sum(stocks[:,IDBSTOCKQTY])
-        stockAvg = numpy.mean(stocks[:,IDBSTOCKVALUE])
+        stockAvg = numpy.sum((stocks[:,IDBSTOCKVALUE]*stocks[:,IDBSTOCKQTY])/stockQty)
         if bDetails:
             for s in stocks:
                 t = s.copy()
                 t[IDBSTOCKTRANSDATE] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCKTRANSDATE])
                 print(t)
-        print("{:32} : {:10.2f} : {:8} : {:16.2f}".format(sn, stockAvg, stockQty, stockSum))
+        print("{:48} : {:10.2f} : {:8} : {:16.2f}".format(sn, stockAvg, stockQty, stockSum))
 
 
 def startup_message():
