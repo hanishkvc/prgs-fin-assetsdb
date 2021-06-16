@@ -13,6 +13,8 @@ import readline
 DELIMITER = ','
 TOKENPROTECTORS = [ "'", '"' ]
 
+IDBSTOCKNAME = 1
+
 
 def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
     """
@@ -89,7 +91,7 @@ def list_stocknames(db):
     List the name of stocks in the db.
     db: the db containing the stocks data.
     """
-    stockNames = numpy.unique(db[:,ISTOCKNAME])
+    stockNames = numpy.unique(db[:,IDBSTOCKNAME])
     for sn in stockNames:
         print(sn)
     return stockNames
