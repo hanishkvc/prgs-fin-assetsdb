@@ -71,7 +71,7 @@ def import_csv_o1(sFile, db=None):
                 continue
             la = handle_asset(la)
             print("INFO:ImportCSVO1:", la)
-            if (db == None):
+            if (type(db) == type(None)):
                 db = numpy.array(la)
             else:
                 db = numpy.vstack((db, la))
@@ -85,5 +85,7 @@ while True:
     try:
         exec(input("$"))
     except:
+        if (sys.exc_info()[0] == SystemExit):
+            break;
         print("ERRR:", sys.exc_info())
 
