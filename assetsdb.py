@@ -21,6 +21,8 @@ IDBSTOCKVALUE = 2
 IDBSTOCKQTY = 3
 IDBSTOCKTRANSVALUE = 4
 
+gbSpaceOutListing = True
+
 
 def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
     """
@@ -138,6 +140,8 @@ def list_stocks(db, filterStocks=[], bDetails=False):
                 t[IDBSTOCKTRANSDATE] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCKTRANSDATE])
                 print(t)
         print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
+        if gbSpaceOutListing:
+            print("")
 
 
 def startup_message():
