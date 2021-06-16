@@ -28,8 +28,11 @@ def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
         if (not bProtectedToken) and (c == delim):
             tA.append(curToken)
             curToken = ""
+            continue
         if c in tokenProtectors:
             bProtectedToken = not bProtectedToken
+            continue
+        curToken += c
     return tA
 
 
@@ -40,6 +43,7 @@ def import_csv_o1(sFile):
     """
     f = open(sFile)
     f.readline()
+    breakpoint()
     for l in f:
         la = csv2list(l)
         print("DBUG:", la)
