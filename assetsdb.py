@@ -114,14 +114,14 @@ def list_stocks(db, filterStocks=[], bDetails=False):
     stockNames = list_stocknames(db, False)
     print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
-        stocks = db[db[:,1] == sn]
+        if (len(filterStocks) > 0) and (sn not in filterStocks):
+            continue
+        stocks = db[db[:,IDBSTOCKNAME] == sn]
         stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
         stockQty = numpy.sum(stocks[:,IDBSTOCKQTY])
         stockAvg = numpy.average(stocks[:,IDBSTOCKVALUE])
-        for s in stocks:
-            if (len(filterStocks) > 0) and (s not in filterStocks):
-                continue
-            if bDetails:
+        if bDetails:
+            for s in stocks:
                 print(s)
         print("{:32} : {:16} {:8} : {:16}".format(sn, stockAvg, stockQty, stockSum))
 
