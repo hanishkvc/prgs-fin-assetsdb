@@ -81,6 +81,23 @@ def import_csv_o1(sFile, db=None):
     return db
 
 
+def list_stocknames(db):
+    stockNames = numpy.unique(db[:,ISTOCKNAME])
+    for sn in stockNames:
+        print(sn)
+    return stockNames
+
+
+def list_stocks(db, filterStocks):
+    stockNames = list_stocknames(db)
+    for sn in stockNames:
+        stocks = db[db[:,1] == sn]
+        for s in stocks:
+            if (len(filterStocks) > 0) and (s not in filterStocks):
+                continue
+            print(s)
+
+
 while True:
     try:
         exec(input("$"))
