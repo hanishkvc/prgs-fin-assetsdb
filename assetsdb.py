@@ -51,8 +51,11 @@ def _handle_asset_csv_o1(la):
 
 def import_csv_o1(sFile, db=None):
     """
-    Assume that the specified file is a csv file following my previous google sheets assets csv exports
-    Skip the 1st line
+    Import csv file which follows my previous google sheets based assets csv exports.
+    sFile: the file to import
+    db: optional db to load the data into. If None, then a new db is created.
+    Note:
+        Skip the 1st line, of the specified file.
     """
     f = open(sFile)
     f.readline()
@@ -82,13 +85,22 @@ def import_csv_o1(sFile, db=None):
 
 
 def list_stocknames(db):
+    """
+    List the name of stocks in the db.
+    db: the db containing the stocks data.
+    """
     stockNames = numpy.unique(db[:,ISTOCKNAME])
     for sn in stockNames:
         print(sn)
     return stockNames
 
 
-def list_stocks(db, filterStocks):
+def list_stocks(db, filterStocks=[]):
+    """
+    List the data about specified stocks in the db.
+    db: the db containing data about stocks
+    filterStocks: a list of stock names or empty list.
+    """
     stockNames = list_stocknames(db)
     for sn in stockNames:
         stocks = db[db[:,1] == sn]
