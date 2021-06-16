@@ -120,7 +120,7 @@ def list_stocks(db, filterStocks=[], bDetails=False):
         stocks = db[db[:,IDBSTOCKNAME] == sn]
         stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
         stockQty = numpy.sum(stocks[:,IDBSTOCKQTY])
-        stockAvg = numpy.average(stocks[:,IDBSTOCKVALUE])
+        stockAvg = numpy.mean(stocks[:,IDBSTOCKVALUE])
         if bDetails:
             for s in stocks:
                 print(s)
