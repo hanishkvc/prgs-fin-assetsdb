@@ -105,6 +105,17 @@ def list_stocknames(db, bPrint=True):
     return stockNames
 
 
+def _stock_summary(stocks):
+    stocksBuy = stocks[stocks[:,IDBSTOCKQTY] > 0]
+    stocksSell = stocks[stocks[:,IDBSTOCKQTY] < 0]
+    stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
+    stockBuyQty = numpy.sum(stocksBuy[:,IDBSTOCKQTY])
+    stockBuyAvg = numpy.sum((stocksBuy[:,IDBSTOCKVALUE]*stocksBuy[:,IDBSTOCKQTY])/stockBuyQty)
+    stockSellQty = numpy.sum(stocksSell[:,IDBSTOCKQTY])
+    stockSellAvg = numpy.sum((stocksSell[:,IDBSTOCKVALUE]*stocksSell[:,IDBSTOCKQTY])/stockSellQty)
+    return stockSum, [stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty]
+
+
 def list_stocks(db, filterStocks=[], bDetails=False):
     """
     List the data about specified stocks in the db.
@@ -119,15 +130,13 @@ def list_stocks(db, filterStocks=[], bDetails=False):
         if (len(filterStocks) > 0) and (sn not in filterStocks):
             continue
         stocks = db[db[:,IDBSTOCKNAME] == sn]
-        stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
-        stockQty = numpy.sum(stocks[:,IDBSTOCKQTY])
-        stockAvg = numpy.sum((stocks[:,IDBSTOCKVALUE]*stocks[:,IDBSTOCKQTY])/stockQty)
+        stockSum, [ stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty] = _stock_summary(stocks)
         if bDetails:
             for s in stocks:
                 t = s.copy()
                 t[IDBSTOCKTRANSDATE] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCKTRANSDATE])
                 print(t)
-        print("{:48} : {:10.2f} : {:8} : {:16.2f}".format(sn, stockAvg, stockQty, stockSum))
+        print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
 
 
 def startup_message():
