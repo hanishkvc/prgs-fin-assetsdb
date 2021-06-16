@@ -7,6 +7,7 @@
 import sys
 import time
 import numpy
+import readline
 
 
 DELIMITER = ','
@@ -81,7 +82,7 @@ def import_csv_o1(sFile, db=None):
 
 while True:
     try:
-        eval(input("$"))
+        exec(input("$"))
     except:
         print("ERRR:", sys.exc_info())
 
