@@ -52,8 +52,9 @@ def _handle_asset_csv_o1(la):
     tTotal = float(la[3].replace(",",""))
     tValue = float(la[4].replace(",", ""))
     tQty = int(la[5].replace(",", ""))
-    if (tTotal != (tValue*tQty)):
-        print("DBUG:ImportCSVO1:TotalValue mismatch", la)
+    tCheck = tValue*tQty
+    if (abs(tTotal - tCheck) > 0.001):
+        input("DBUG:ImportCSVO1:TotalValue mismatch:{}".format(la), tCheck)
     return [ tDate, tSymbol, tValue, tQty, tTotal ]
 
 
