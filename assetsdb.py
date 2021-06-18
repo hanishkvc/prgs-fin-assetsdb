@@ -5,12 +5,15 @@
 
 
 import sys
+import os
 import time
 import numpy
 import readline
 import rlcompleter
 import traceback
 
+
+HISTORYFILE="./.assetsdb.history"
 
 DELIMITER = ','
 TOKENPROTECTORS = [ "'", '"' ]
@@ -154,7 +157,20 @@ def startup():
     startup_message()
 
 
+def load_history(histFile):
+    if os.path.exists(histFile):
+        readline.read_history_file(histFile)
+    else:
+        f = open(histFile, mode="wt")
+        f.close()
+
+
+def save_history(histFile):
+    readline.write_history_file(histFile)
+
+
 def runme():
+    load_history(HISTORYFILE)
     while True:
         try:
             exec(input("$"))
@@ -163,6 +179,7 @@ def runme():
                 break;
             #print("ERRR:", sys.exc_info())
             traceback.print_exc()
+    save_history(HISTORYFILE)
 
 
 startup()
