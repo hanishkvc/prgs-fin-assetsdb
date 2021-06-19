@@ -59,7 +59,25 @@ def _handle_asset_csv_o1(la):
     return [ tDate, tSymbol, tValue, tQty, tTotal ]
 
 
-def import_csv_o1(sFile, db=None):
+
+def _import_o1_record(l, la):
+    if len(la) < 4:
+        return None
+    if len(la[1]) < 8:
+        return None
+    if not la[1][0].isnumeric():
+        return None
+    if la[2][0].strip().startswith("#"):
+        return None
+    la = _handle_asset_csv_o1(la)
+    return la
+
+
+
+ImportCSV = {
+    'o1': _import_o1_record
+    }
+def import_csv(csvType, sFile, db=None):
     """
     Import csv file which follows my previous google sheets based assets csv exports.
     sFile: the file to import
@@ -72,17 +90,11 @@ def import_csv_o1(sFile, db=None):
     #breakpoint()
     for l in f:
         la = csv2list(l)
-        #print("DBUG:ImportCSVO1:CurLine:", la)
-        if len(la) < 4:
-            continue
-        if len(la[1]) < 8:
-            continue
-        if not la[1][0].isnumeric():
-            continue
+        #print("DBUG:ImportCSV:CurLine:", l, la)
         try:
-            if la[2][0].strip().startswith("#"):
+            la = ImportCSV[csvType](l, la)
+            if (type(la) == type(None)):
                 continue
-            la = _handle_asset_csv_o1(la)
             print("INFO:ImportCSVO1:", la)
             if (type(db) == type(None)):
                 db = numpy.array(la)
