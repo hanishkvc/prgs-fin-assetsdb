@@ -18,11 +18,7 @@ HISTORYFILE="./.assetsdb.history"
 DELIMITER = ','
 TOKENPROTECTORS = [ "'", '"' ]
 
-IDBSTOCKTRANSDATE = 0
-IDBSTOCKNAME = 1
-IDBSTOCKVALUE = 2
-IDBSTOCKQTY = 3
-IDBSTOCKTRANSVALUE = 4
+IDBSTOCK = { 'TRANSDATE': 0, 'NAME': 1, 'VALUE': 2, 'QTY': 3, 'TRANSVALUE': 4 }
 
 gbSpaceOutListing = True
 
@@ -103,7 +99,7 @@ def list_stocknames(db, bPrint=True):
     Retrieve and optionally print the name of stocks in the db.
     db: the db containing the stocks data.
     """
-    stockNames = numpy.unique(db[:,IDBSTOCKNAME])
+    stockNames = numpy.unique(db[:,IDBSTOCK['NAME']])
     for i in range(len(stockNames)):
         sn = stockNames[i]
         if (bPrint):
@@ -112,13 +108,13 @@ def list_stocknames(db, bPrint=True):
 
 
 def _stock_summary(stocks):
-    stocksBuy = stocks[stocks[:,IDBSTOCKQTY] > 0]
-    stocksSell = stocks[stocks[:,IDBSTOCKQTY] < 0]
-    stockSum = numpy.sum(stocks[:,IDBSTOCKTRANSVALUE])
-    stockBuyQty = numpy.sum(stocksBuy[:,IDBSTOCKQTY])
-    stockBuyAvg = numpy.sum((stocksBuy[:,IDBSTOCKVALUE]*stocksBuy[:,IDBSTOCKQTY])/stockBuyQty)
-    stockSellQty = numpy.sum(stocksSell[:,IDBSTOCKQTY])
-    stockSellAvg = numpy.sum((stocksSell[:,IDBSTOCKVALUE]*stocksSell[:,IDBSTOCKQTY])/stockSellQty)
+    stocksBuy = stocks[stocks[:,IDBSTOCK['QTY']] > 0]
+    stocksSell = stocks[stocks[:,IDBSTOCK['QTY']] < 0]
+    stockSum = numpy.sum(stocks[:,IDBSTOCK['TRANSVALUE']])
+    stockBuyQty = numpy.sum(stocksBuy[:,IDBSTOCK['QTY']])
+    stockBuyAvg = numpy.sum((stocksBuy[:,IDBSTOCK['VALUE']]*stocksBuy[:,IDBSTOCK['QTY']])/stockBuyQty)
+    stockSellQty = numpy.sum(stocksSell[:,IDBSTOCK['QTY']])
+    stockSellAvg = numpy.sum((stocksSell[:,IDBSTOCK['VALUE']]*stocksSell[:,IDBSTOCK['QTY']])/stockSellQty)
     return stockSum, [stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty]
 
 
@@ -128,19 +124,19 @@ def list_stocks(db, filterStocks=[], bDetails=False):
     db: the db containing data about stocks
     filterStocks: a list of stock names or empty list.
     """
-    totalSum = numpy.sum(db[:,IDBSTOCKTRANSVALUE])
-    totalQty = numpy.sum(db[:,IDBSTOCKQTY])
+    totalSum = numpy.sum(db[:,IDBSTOCK['TRANSVALUE']])
+    totalQty = numpy.sum(db[:,IDBSTOCK['QTY']])
     stockNames = list_stocknames(db, False)
     print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
         if (len(filterStocks) > 0) and (sn not in filterStocks):
             continue
-        stocks = db[db[:,IDBSTOCKNAME] == sn]
+        stocks = db[db[:,IDBSTOCK['NAME']] == sn]
         stockSum, [ stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty] = _stock_summary(stocks)
         if bDetails:
             for s in stocks:
                 t = s.copy()
-                t[IDBSTOCKTRANSDATE] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCKTRANSDATE])
+                t[IDBSTOCK['TRANSDATE']] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCK['TRANSDATE']])
                 print(t)
         print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
         if gbSpaceOutListing:
