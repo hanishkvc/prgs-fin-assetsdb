@@ -113,7 +113,7 @@ def _import_kite_openorders_record(l, la):
 
 
 def _list_kite_openorders(db):
-    [ print("{:32} {:8.2f} {:8.2f} {:10.4f}".format(x[1], x[2], x[5], x[6])) for x in db ]
+    [ print("{:32} {:8} {:8.2f} {:8.2f} {:8.2f}".format(x[1], x[3], x[2], x[5], (x[6]-1)*100), end="\n\n") for x in db ]
 
 
 def _import_kite_header(f, csvType):
