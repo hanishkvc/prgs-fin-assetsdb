@@ -47,9 +47,14 @@ def csv2list(inL, delim=DELIMITER, fieldProtectors = FIELDPROTECTORS):
     return tA
 
 
+SymbolMap = {
+        'SUBEXLTD': 'SUBEX'
+        }
 def _fix_symbol(symbol):
     if symbol.endswith("-BE"):
         symbol = symbol[:-3]
+    if symbol in SymbolMap:
+        symbol = SymbolMap[symbol]
     return symbol
 
 
