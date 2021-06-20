@@ -93,7 +93,26 @@ def _import_kite_trades_record(l, la):
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
 
 
-def _import_kite_trades_header(f, csvType):
+def _import_kite_openorders_record(l, la):
+    """
+    Import the csv file generated when exporting open orders from kite
+    NOTE: Assumes that the open orders have not been partially fullfilled.
+    """
+    if len(la) != 8:
+        input("WARN:ImportKiteOpenOrders: CSV file format might have changed...")
+        return None
+    fi = CSVDataFile['KiteOpenOrders']['FieldIndex']
+    tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
+    tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
+    tSymbol = la[fi['INSTRUMENT']]
+    tQty = int(la[fi['QTY']].split('/')[1].replace(",", ""))*tType
+    tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
+    tLTP = float(la[fi['LTP']].replace(",", ""))
+    tTotal = tUnitPrice*tQty
+    return [ tDate, tSymbol, tUnitPrice, tQty, tTotal, tLTP, round(tUnitPrice/tLTP,2) ]
+
+
+def _import_kite_header(f, csvType):
     global CSVDataFile
     l = f.readline()
     l = l.upper()
@@ -129,12 +148,19 @@ CSVDataFile = {
         'skipLinesAtBegin': 1,
         },
     'KiteTrades': {
-        'import_header': _import_kite_trades_header,
+        'import_header': _import_kite_header,
         'import_record': _import_kite_trades_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
-        }
+        },
+    'KiteOpenOrders': {
+        'import_header': _import_kite_header,
+        'import_record': _import_kite_openorders_record,
+        'delim': ',',
+        'fieldProtectors': [ '"', "'" ],
+        'skipLinesAtBegin': 1,
+        },
     }
 def import_csv(csvType, sFile, db=None):
     """
