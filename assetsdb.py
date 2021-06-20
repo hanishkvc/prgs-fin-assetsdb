@@ -76,7 +76,6 @@ def _import_o1_record(l, la):
     return la
 
 
-
 def _import_kite_trades_record(l, la):
     """
     Import the csv file generated when exporting trades from kite
@@ -93,16 +92,22 @@ def _import_kite_trades_record(l, la):
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
 
 
+def _import_header_skip(f, csvType):
+    for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
+        f.readline()
+
 
 CSVDataFile = {
     'O1': {
-        'import': _import_o1_record,
+        'import_header': _import_header_skip,
+        'import_record': _import_o1_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
         },
     'KiteTrades': {
-        'import': _import_kite_trades_record,
+        'import_header': _import_header_skip,
+        'import_record': _import_kite_trades_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
@@ -120,14 +125,13 @@ def import_csv(csvType, sFile, db=None):
     db: optional db to load the data into. If None, then a new db is created.
     """
     f = open(sFile)
-    for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
-        f.readline()
+    CSVDataFile[csvType]['import_header'](f, csvType)
     #breakpoint()
     for l in f:
         la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['fieldProtectors'])
         #print("DBUG:ImportCSV:CurLine:", l, la)
         try:
-            la = CSVDataFile[csvType]['import'](l, la)
+            la = CSVDataFile[csvType]['import_record'](l, la)
             if (type(la) == type(None)):
                 continue
             print("INFO:ImportCSV:", la)
