@@ -16,18 +16,18 @@ import traceback
 HISTORYFILE="./.assetsdb.history"
 
 DELIMITER = ','
-TOKENPROTECTORS = [ "'", '"' ]
+FIELDPROTECTORS = [ "'", '"' ]
 
 IDBSTOCK = { 'TRANSDATE': 0, 'NAME': 1, 'VALUE': 2, 'QTY': 3, 'TRANSVALUE': 4 }
 
 gbSpaceOutListing = True
 
 
-def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
+def csv2list(inL, delim=DELIMITER, fieldProtectors = FIELDPROTECTORS):
     """
     Convert a csv line into a python list.
     delim: the character used to delimit the fields
-    tokenProtectors: characters that could be used to protect fields having delim char in them.
+    fieldProtectors: characters that could be used to protect fields having delim char in them.
     """
     tA = []
     curToken = ""
@@ -40,7 +40,7 @@ def csv2list(inL, delim=DELIMITER, tokenProtectors = TOKENPROTECTORS):
             tA.append(curToken)
             curToken = ""
             continue
-        if c in tokenProtectors:
+        if c in fieldProtectors:
             bProtectedToken = not bProtectedToken
             continue
         curToken += c
@@ -81,7 +81,7 @@ CSVDataFile = {
     'o1': {
         'import': _import_o1_record,
         'delim': ',',
-        'tokenProtector': '"',
+        'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
         }
     }
@@ -90,7 +90,7 @@ def import_csv(csvType, sFile, db=None):
     Import csv file main flow
     csvType: Specifies the type of csv file to import, which is used to get details like
         the delimiter of the fields,
-        the fieldProtector (Used to allow delimiter to be present within a fields value)
+        the fieldProtectors (Used to allow delimiter to be present within a fields value)
         the number of lines to skip, if any at the begining.
         the function used to infer the data in each line of the csv file.
     sFile: the file to import
@@ -101,20 +101,20 @@ def import_csv(csvType, sFile, db=None):
         f.readline()
     #breakpoint()
     for l in f:
-        la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['tokenProtector'])
+        la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['fieldProtectors'])
         #print("DBUG:ImportCSV:CurLine:", l, la)
         try:
             la = CSVDataFile[csvType]['import'](l, la)
             if (type(la) == type(None)):
                 continue
-            print("INFO:ImportCSVO1:", la)
+            print("INFO:ImportCSV:", la)
             if (type(db) == type(None)):
                 db = numpy.array(la)
             else:
                 db = numpy.vstack((db, la))
         except:
             print(sys.exc_info())
-            input("ERRR:ImportCSVO1:{}".format(la))
+            input("ERRR:ImportCSV:{}".format(la))
     return db
 
 
