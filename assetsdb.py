@@ -61,6 +61,9 @@ def _handle_asset_csv_o1(la):
 
 
 def _import_o1_record(l, la):
+    """
+    Import a csv file record, which follows my previous google sheets based assets csv exports.
+    """
     if len(la) < 4:
         return None
     if len(la[1]) < 8:
@@ -74,25 +77,34 @@ def _import_o1_record(l, la):
 
 
 
-ImportCSV = {
-    'o1': _import_o1_record
+CSVDataFile = {
+    'o1': {
+        'import': _import_o1_record,
+        'delim': ',',
+        'tokenProtector': '"',
+        'skipLinesAtBegin': 1,
+        }
     }
 def import_csv(csvType, sFile, db=None):
     """
-    Import csv file which follows my previous google sheets based assets csv exports.
+    Import csv file main flow
+    csvType: Specifies the type of csv file to import, which is used to get details like
+        the delimiter of the fields,
+        the fieldProtector (Used to allow delimiter to be present within a fields value)
+        the number of lines to skip, if any at the begining.
+        the function used to infer the data in each line of the csv file.
     sFile: the file to import
     db: optional db to load the data into. If None, then a new db is created.
-    Note:
-        Skip the 1st line, of the specified file.
     """
     f = open(sFile)
-    f.readline()
+    for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
+        f.readline()
     #breakpoint()
     for l in f:
-        la = csv2list(l)
+        la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['tokenProtector'])
         #print("DBUG:ImportCSV:CurLine:", l, la)
         try:
-            la = ImportCSV[csvType](l, la)
+            la = CSVDataFile[csvType]['import'](l, la)
             if (type(la) == type(None)):
                 continue
             print("INFO:ImportCSVO1:", la)
