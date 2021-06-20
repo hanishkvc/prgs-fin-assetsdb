@@ -81,11 +81,11 @@ def _import_kite_trades_record(l, la):
     """
     Import the csv file generated when exporting trades from kite
     """
-    if len(la) != 8:
+    if len(la) != 7:
         input("WARN:ImportKiteTrades: CSV file format might have changed...")
         return None
     tDate = time.strptime(la[1], "%Y-%m-%d %H:%M:%S")
-    tType = (la[2] == 'BUY') ? 1 : -1
+    tType = 1 if (la[2] == 'BUY') else -1
     tSymbol = la[3]
     tQty = int(la[5].replace(",", ""))*tType
     tUnitPrice = float(la[6].replace(",", ""))
