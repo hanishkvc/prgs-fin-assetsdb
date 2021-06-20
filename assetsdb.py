@@ -77,9 +77,32 @@ def _import_o1_record(l, la):
 
 
 
+def _import_kite_trades_record(l, la):
+    """
+    Import the csv file generated when exporting trades from kite
+    """
+    if len(la) != 8:
+        input("WARN:ImportKiteTrades: CSV file format might have changed...")
+        return None
+    tDate = time.strptime(la[1], "%Y-%m-%d %H:%M:%S")
+    tType = (la[2] == 'BUY') ? 1 : -1
+    tSymbol = la[3]
+    tQty = int(la[5].replace(",", ""))*tType
+    tUnitPrice = float(la[6].replace(",", ""))
+    tTotal = tUnitPrice*tQty
+    return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
+
+
+
 CSVDataFile = {
-    'o1': {
+    'O1': {
         'import': _import_o1_record,
+        'delim': ',',
+        'fieldProtectors': [ '"', "'" ],
+        'skipLinesAtBegin': 1,
+        },
+    'KiteTrades': {
+        'import': _import_kite_trades_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
