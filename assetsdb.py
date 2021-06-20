@@ -83,13 +83,36 @@ def _import_kite_trades_record(l, la):
     if len(la) != 7:
         input("WARN:ImportKiteTrades: CSV file format might have changed...")
         return None
-    tDate = time.strptime(la[1], "%Y-%m-%d %H:%M:%S")
-    tType = 1 if (la[2] == 'BUY') else -1
-    tSymbol = la[3]
-    tQty = int(la[5].replace(",", ""))*tType
-    tUnitPrice = float(la[6].replace(",", ""))
+    fi = CSVDataFile['KiteTrades']['FieldIndex']
+    tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
+    tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
+    tSymbol = la[fi['INSTRUMENT']]
+    tQty = int(la[fi['QTY']].replace(",", ""))*tType
+    tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tTotal = tUnitPrice*tQty
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
+
+
+def _import_kite_trades_header(f, csvType):
+    global CSVDataFile
+    l = f.readline()
+    l = l.upper()
+    la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['fieldProtectors'])
+    fi = {}
+    for i in range(len(la)):
+        if la[i].startswith("QTY"):
+            fi['QTY'] = i
+        elif la[i].startswith("INSTRUMENT"):
+            fi['INSTRUMENT'] = i
+        elif la[i].startswith("TYPE"):
+            fi['TYPE'] = i
+        elif la[i].find("PRICE") != -1:
+            fi['PRICE'] = i
+        elif la[i].startswith("LTP"):
+            fi['LTP'] = i
+        elif la[i].find("TIME") != -1:
+            fi['TIME'] = i
+    CSVDataFile[csvType]['FieldIndex'] = fi
 
 
 def _import_header_skip(f, csvType):
@@ -106,7 +129,7 @@ CSVDataFile = {
         'skipLinesAtBegin': 1,
         },
     'KiteTrades': {
-        'import_header': _import_header_skip,
+        'import_header': _import_kite_trades_header,
         'import_record': _import_kite_trades_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
