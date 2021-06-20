@@ -47,9 +47,15 @@ def csv2list(inL, delim=DELIMITER, fieldProtectors = FIELDPROTECTORS):
     return tA
 
 
+def _fix_symbol(symbol):
+    if symbol.endswith("-BE"):
+        symbol = symbol[:-3]
+    return symbol
+
+
 def _handle_asset_csv_o1(la):
     tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
-    tSymbol = la[2]
+    tSymbol = _fix_symbol(la[2])
     tTotal = float(la[3].replace(",",""))
     tValue = float(la[4].replace(",", ""))
     tQty = int(la[5].replace(",", ""))
@@ -86,7 +92,7 @@ def _import_kite_trades_record(l, la):
     fi = CSVDataFile['KiteTrades']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
-    tSymbol = la[fi['INSTRUMENT']]
+    tSymbol = _fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].replace(",", ""))*tType
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tTotal = tUnitPrice*tQty
@@ -104,7 +110,7 @@ def _import_kite_openorders_record(l, la):
     fi = CSVDataFile['KiteOpenOrders']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
-    tSymbol = la[fi['INSTRUMENT']]
+    tSymbol = _fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].split('/')[1].replace(",", ""))*tType
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tLTP = float(la[fi['LTP']].replace(",", ""))
