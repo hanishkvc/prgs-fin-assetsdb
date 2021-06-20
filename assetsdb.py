@@ -109,7 +109,11 @@ def _import_kite_openorders_record(l, la):
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tLTP = float(la[fi['LTP']].replace(",", ""))
     tTotal = tUnitPrice*tQty
-    return [ tDate, tSymbol, tUnitPrice, tQty, tTotal, tLTP, round(tUnitPrice/tLTP,2) ]
+    return [ tDate, tSymbol, tUnitPrice, tQty, tTotal, tLTP, round(tUnitPrice/tLTP,4) ]
+
+
+def _list_kite_openorders(db):
+    [ print("{:32} {:8.2f} {:8.2f} {:10.4f}".format(x[1], x[2], x[5], x[6])) for x in db ]
 
 
 def _import_kite_header(f, csvType):
@@ -245,7 +249,7 @@ def list_stocks(db, filterStocks=[], bDetails=False):
 
 def startup_message():
     print("INFO: AssetsDB")
-    print("NOTE: sys.exit() to quit")
+    print("NOTE: exit() to quit")
 
 
 def startup():
