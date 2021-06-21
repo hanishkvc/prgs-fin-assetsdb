@@ -155,6 +155,20 @@ def _import_kite_header(f, csvType):
     CSVDataFile[csvType]['FieldIndex'] = fi
 
 
+def _import_funds_record(l, la):
+    """
+    Import the csv file manually created to contain the funds used for a specific type of asset.
+    The csv file should consist of Time, Amount
+    """
+    if len(la) != 2:
+        input("WARN:ImportFunds: CSV file format might have changed...")
+        return None
+    fi = CSVDataFile['Funds']['FieldIndex']
+    tDate = time.strptime(la[fi['TIME']], "%Y%m%dIST%H%M")
+    tAmount = float(la[fi['AMOUNT']].replace(",", ""))
+    return [ tDate, tAmount ]
+
+
 def _import_header_skip(f, csvType):
     for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
         f.readline()
@@ -181,6 +195,14 @@ CSVDataFile = {
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
+        },
+    'Funds': {
+        'import_header': _import_header_skip,
+        'import_record': _import_funds_record,
+        'delim': ',',
+        'fieldProtectors': [ '"', "'" ],
+        'skipLinesAtBegin': 1,
+        'FieldIndex': { 'TIME': 0, 'AMOUNT': 1 },
         },
     }
 def import_csv(csvType, sFile, db=None):
