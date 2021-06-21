@@ -169,6 +169,15 @@ def _import_funds_record(l, la):
     return [ tDate, tAmount ]
 
 
+def _list_funds(db):
+    tSum = 0
+    for x in db:
+        tSum += x[1]
+        tDate = time.strftime("%Y%m%dIST%H%M", x[0])
+        print("{:16} {:8.2f}".format(tDate, x[1]), end="\n\n")
+    print("{:16} : {}".format("TotalValue", tSum))
+
+
 def _import_header_skip(f, csvType):
     for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
         f.readline()
