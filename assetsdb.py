@@ -178,12 +178,30 @@ def _list_funds(db):
     print("{:16} : {}".format("TotalValue", tSum))
 
 
+def _import_generic_record(l, la):
+    ra = []
+    for c in la:
+        try:
+            f = float(c.replace(",",""))
+            ra.append(f)
+        except:
+            ra.append(c)
+    return ra
+
+
 def _import_header_skip(f, csvType):
     for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
         f.readline()
 
 
 CSVDataFile = {
+    'Generic': {
+        'import_header': _import_header_skip,
+        'import_record': _import_generic_record,
+        'delim': ',',
+        'fieldProtectors': [ '"', "'" ],
+        'skipLinesAtBegin': 0,
+        },
     'O1': {
         'import_header': _import_header_skip,
         'import_record': _import_o1_record,
