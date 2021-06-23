@@ -255,9 +255,9 @@ def import_csv(csvType, sFile, db=None):
                 continue
             print("INFO:ImportCSV:", la)
             if (type(db) == type(None)):
-                db = numpy.array(la)
+                db = numpy.array(la, dtype=object)
             else:
-                db = numpy.vstack((db, la))
+                db = numpy.vstack((db, numpy.array(la, dtype=object)))
         except:
             print(sys.exc_info())
             input("ERRR:ImportCSV:{}".format(la))
