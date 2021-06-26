@@ -335,7 +335,16 @@ def save_history(histFile):
     readline.write_history_file(histFile)
 
 
+def init_scripts(srcFiles):
+    for srcFile in srcFiles:
+        f = open(srcFile)
+        src = f.read()
+        f.close()
+        exec(src)
+
+
 def runme():
+    init_scripts(sys.argv[1:])
     load_history(HISTORYFILE)
     while True:
         try:
