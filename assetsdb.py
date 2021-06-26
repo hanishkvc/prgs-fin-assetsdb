@@ -340,7 +340,7 @@ def init_scripts(srcFiles):
         f = open(srcFile)
         src = f.read()
         f.close()
-        exec(src)
+        exec(src, globals())
 
 
 def runme():
