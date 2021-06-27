@@ -25,7 +25,7 @@ gbSpaceOutListing = True
 
 def _handle_asset_csv_o1(la):
     tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
-    tSymbol = _fix_symbol(la[2])
+    tSymbol = fix_symbol(la[2])
     tTotal = float(la[3].replace(",",""))
     tValue = float(la[4].replace(",", ""))
     tQty = int(la[5].replace(",", ""))

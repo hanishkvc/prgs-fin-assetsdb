@@ -41,7 +41,7 @@ def _import_kite_trades_record(l, la):
     fi = CSVDataFile['KiteTrades']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
-    tSymbol = _fix_symbol(la[fi['INSTRUMENT']])
+    tSymbol = fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].replace(",", ""))*tType
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tTotal = tUnitPrice*tQty
@@ -59,7 +59,7 @@ def _import_kite_openorders_record(l, la):
     fi = CSVDataFile['KiteOpenOrders']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
-    tSymbol = _fix_symbol(la[fi['INSTRUMENT']])
+    tSymbol = fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].split('/')[1].replace(",", ""))*tType
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tLTP = float(la[fi['LTP']].replace(",", ""))
