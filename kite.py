@@ -29,6 +29,13 @@ def init(inCSVDataFile):
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
         }
+    CSVDataFile['KiteHoldings'] = {
+        'import_header': _import_kite_header,
+        'import_record': _import_kite_holdings_record,
+        'delim': ',',
+        'fieldProtectors': [ '"', "'" ],
+        'skipLinesAtBegin': 1,
+        }
 
 
 def _import_kite_trades_record(l, la):
@@ -92,10 +99,28 @@ def _import_kite_header(f, csvType):
             fi['TYPE'] = i
         elif la[i].find("PRICE") != -1:
             fi['PRICE'] = i
+        elif la[i].find("AVG. COST") != -1:
+            fi['AVGPRICE'] = i
         elif la[i].startswith("LTP"):
             fi['LTP'] = i
         elif la[i].find("TIME") != -1:
             fi['TIME'] = i
     CSVDataFile[csvType]['FieldIndex'] = fi
+
+
+def _import_kite_holdings_record(l, la):
+    """
+    Import the csv file generated when exporting holdings from kite
+    """
+    if len(la) != 8:
+        input("WARN:ImportKiteHoldings: CSV file format might have changed...")
+        return None
+    fi = CSVDataFile['KiteHoldings']['FieldIndex']
+    tSymbol = fix_symbol(la[fi['INSTRUMENT']])
+    tQty = int(la[fi['QTY']].replace(",", ""))
+    tAvgPrice = float(la[fi['AVGPRICE']].replace(",", ""))
+    tLTP = float(la[fi['LTP']].replace(",", ""))
+    tTotal = tAvgPrice*tQty
+    return [ tSymbol, tAvgPrice, tQty, tTotal, tLTP, round((tLTP/tAvgPrice)-1,4) ]
 
 
