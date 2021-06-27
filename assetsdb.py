@@ -361,7 +361,9 @@ def runme():
     load_history(HISTORYFILE)
     while True:
         try:
-            exec(input("$"))
+            res=eval(input("$"))
+            if(type(res) != type(None)):
+                print(res)
         except:
             if (sys.exc_info()[0] == SystemExit):
                 break;
