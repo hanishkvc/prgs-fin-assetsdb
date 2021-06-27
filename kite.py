@@ -101,10 +101,16 @@ def _import_kite_header(f, csvType):
             fi['PRICE'] = i
         elif la[i].find("AVG. COST") != -1:
             fi['AVGPRICE'] = i
+        elif la[i].find("CUR. VAL") != -1:
+            fi['CURVALUE'] = i
         elif la[i].startswith("LTP"):
             fi['LTP'] = i
         elif la[i].find("TIME") != -1:
             fi['TIME'] = i
+        elif la[i].find("NET CHG") != -1:
+            fi['NETCHG'] = i
+        elif la[i].find("DAY CHG") != -1:
+            fi['DAYCHG'] = i
     CSVDataFile[csvType]['FieldIndex'] = fi
 
 
@@ -120,7 +126,15 @@ def _import_kite_holdings_record(l, la):
     tQty = int(la[fi['QTY']].replace(",", ""))
     tAvgPrice = float(la[fi['AVGPRICE']].replace(",", ""))
     tLTP = float(la[fi['LTP']].replace(",", ""))
-    tTotal = tAvgPrice*tQty
-    return [ tSymbol, tAvgPrice, tQty, tTotal, tLTP, round((tLTP/tAvgPrice)-1,4) ]
+    tCurValue = float(la[fi['CURVALUE']].replace(",", ""))
+    tNetChg = float(la[fi['NETCHG']].replace(",", ""))
+    tDayChg = float(la[fi['DAYCHG']].replace(",", ""))
+    tCheck = tAvgPrice*tQty
+    if (abs(tCurValue - tCheck) > 0.001):
+        input("DBUG:ImportKiteHoldings:CurValue mismatch:{}".format(la), tCheck)
+    tCheck = round((tLTP/tAvgPrice)-1,4)
+    if (abs(tNetChg - tCheck) > 0.001):
+        input("DBUG:ImportKiteHoldings:NetChg mismatch:{}".format(la), tCheck)
+    return [ tSymbol, tLTP, tAvgPrice, tQty, tCurValue, tNetChg, tDayChg ]
 
 
