@@ -142,7 +142,8 @@ def import_csv(csvType, sFile, db=None):
             else:
                 db = numpy.vstack((db, numpy.array(la, dtype=object)))
         except:
-            print(sys.exc_info())
+            #print(sys.exc_info())
+            traceback.print_exc()
             input("ERRR:ImportCSV:{}".format(la))
     return db
 
