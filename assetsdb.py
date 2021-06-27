@@ -13,6 +13,12 @@ import rlcompleter
 import traceback
 
 
+gDEBUGLVLERROR = 0
+gDEBUGLVLWARN = 1
+gDEBUGLVLINFO = 2
+gDEBUGLVLTHRESHOLD = gDEBUGLVLWARN
+gDEBUGLVLDEFAULT = gDEBUGLVLTHRESHOLD+1
+
 HISTORYFILE="./.assetsdb.history"
 
 DELIMITER = ','
@@ -21,6 +27,13 @@ FIELDPROTECTORS = [ "'", '"' ]
 IDBSTOCK = { 'TRANSDATE': 0, 'NAME': 1, 'VALUE': 2, 'QTY': 3, 'TRANSVALUE': 4 }
 
 gbSpaceOutListing = True
+
+
+def dprint(msg, dbgLvl=None):
+    dbgLvl = gDEBUGLVLDEFAULT if (dbgLvl == None) else dbgLvl
+    if (dbgLvl > gDEBUGLVLTHRESHOLD):
+        return
+    print(msg)
 
 
 def csv2list(inL, delim=DELIMITER, fieldProtectors = FIELDPROTECTORS):
@@ -253,7 +266,7 @@ def import_csv(csvType, sFile, db=None):
             la = CSVDataFile[csvType]['import_record'](l, la)
             if (type(la) == type(None)):
                 continue
-            print("INFO:ImportCSV:", la)
+            dprint("INFO:ImportCSV:{}".format(la), gDEBUGLVLINFO)
             if (type(db) == type(None)):
                 db = numpy.array(la, dtype=object)
             else:
