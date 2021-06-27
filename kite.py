@@ -140,9 +140,12 @@ def _import_kite_holdings_record(l, la):
 
 
 def _list_kite_holdings(db, sortBy=-2, mayBeAdj=0.98):
+    theFormat = "{:32} {:8.2f} {:8.2f} {:8} {:8.2f} {:8.2f} {:8.2f} {:8.2f}"
     dbN = db[numpy.argsort(db[:,sortBy])]
+    theHFormat = theFormat.replace(".2f","")
+    print(theHFormat.format("Symbol", "LTP", "AvgPrice", "Qty", "CurVal", "NetChg", "DayChg", "MayBe"), end="\n\n")
     for x in dbN:
         tMayBe = x[1]*mayBeAdj
-        print("{:32} {:8.2f} {:8.2f} {:8} {:8.2f} {:5.2f} {:5.2f} {:8.2f}".format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], tMayBe), end="\n\n")
+        print(theFormat.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], tMayBe), end="\n\n")
 
 
