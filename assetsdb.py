@@ -31,7 +31,7 @@ def _handle_asset_csv_o1(la):
     tQty = int(la[5].replace(",", ""))
     tCheck = tValue*tQty
     if (abs(tTotal - tCheck) > 0.001):
-        input("DBUG:ImportCSVO1:TotalValue mismatch:{}".format(la), tCheck)
+        input("DBUG:ImportCSVO1:TotalValue mismatch:{}:{}".format(la, tCheck))
     return [ tDate, tSymbol, tValue, tQty, tTotal ]
 
 

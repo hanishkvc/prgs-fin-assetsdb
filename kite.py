@@ -131,10 +131,10 @@ def _import_kite_holdings_record(l, la):
     tDayChg = float(la[fi['DAYCHG']].replace(",", ""))
     tCheck = tAvgPrice*tQty
     if (abs(tCurValue - tCheck) > 0.001):
-        input("DBUG:ImportKiteHoldings:CurValue mismatch:{}".format(la), tCheck)
+        input("DBUG:ImportKiteHoldings:CurValue mismatch:{}:{}".format(la, tCheck))
     tCheck = round((tLTP/tAvgPrice)-1,4)
     if (abs(tNetChg - tCheck) > 0.001):
-        input("DBUG:ImportKiteHoldings:NetChg mismatch:{}".format(la), tCheck)
+        input("DBUG:ImportKiteHoldings:NetChg mismatch:{}:{}".format(la, tCheck))
     return [ tSymbol, tLTP, tAvgPrice, tQty, tCurValue, tNetChg, tDayChg ]
 
 
