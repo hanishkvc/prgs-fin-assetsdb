@@ -361,10 +361,13 @@ def runme():
     load_history(HISTORYFILE)
     while True:
         try:
+            bDoExec = False
             try:
                 toRun = input("$")
                 res = eval(toRun)
             except SyntaxError:
+                bDoExec = True
+            if bDoExec:
                 res = exec(toRun)
             if(type(res) != type(None)):
                 print(res)
