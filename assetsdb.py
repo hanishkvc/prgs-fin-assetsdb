@@ -13,6 +13,7 @@ import rlcompleter
 import traceback
 
 from hlpr import *
+import generic
 import kite
 import h7
 
@@ -23,32 +24,9 @@ IDBSTOCK = { 'TRANSDATE': 0, 'NAME': 1, 'VALUE': 2, 'QTY': 3, 'TRANSVALUE': 4 }
 
 gbSpaceOutListing = True
 
-
-def _import_generic_record(l, la):
-    ra = []
-    for c in la:
-        try:
-            f = float(c.replace(",",""))
-            ra.append(f)
-        except:
-            ra.append(c)
-    return ra
+CSVDataFile = { }
 
 
-def _import_header_skip(f, csvType):
-    for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
-        f.readline()
-
-
-CSVDataFile = {
-    'Generic': {
-        'import_header': _import_header_skip,
-        'import_record': _import_generic_record,
-        'delim': ',',
-        'fieldProtectors': [ '"', "'" ],
-        'skipLinesAtBegin': 0,
-        },
-    }
 def import_csv(csvType, sFile, db=None):
     """
     Import csv file main flow
@@ -137,6 +115,7 @@ def startup_message():
 
 
 def startup():
+    generic.init(CSVDataFile)
     h7.init(CSVDataFile)
     kite.init(CSVDataFile)
     readline.parse_and_bind("tab: complete")
