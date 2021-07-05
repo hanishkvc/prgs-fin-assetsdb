@@ -39,13 +39,13 @@ def import_csv(csvType, sFile, db=None):
     db: optional db to load the data into. If None, then a new db is created.
     """
     f = open(sFile)
-    CSVDataFile[csvType]['import_header'](f, csvType)
+    CSVDataFile[csvType]['import_header'](CSVDataFile, f, csvType)
     #breakpoint()
     for l in f:
         la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['fieldProtectors'])
         #print("DBUG:ImportCSV:CurLine:", l, la)
         try:
-            la = CSVDataFile[csvType]['import_record'](l, la)
+            la = CSVDataFile[csvType]['import_record'](CSVDataFile, l, la)
             if (type(la) == type(None)):
                 continue
             dprint("INFO:ImportCSV:{}".format(la), gDEBUGLVLINFO)

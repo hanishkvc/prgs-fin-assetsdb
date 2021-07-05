@@ -10,12 +10,7 @@ import numpy
 from hlpr import *
 
 
-CSVDataFile = None
-
-
-def init(inCSVDataFile):
-    global CSVDataFile
-    CSVDataFile = inCSVDataFile
+def init(CSVDataFile):
     CSVDataFile['KiteTrades'] = {
         'import_header': _import_kite_header,
         'import_record': _import_kite_trades_record,
@@ -39,14 +34,14 @@ def init(inCSVDataFile):
         }
 
 
-def _import_kite_trades_record(l, la):
+def _import_kite_trades_record(csvDF, l, la):
     """
     Import the csv file generated when exporting trades from kite
     """
     if len(la) != 7:
         input("WARN:ImportKiteTrades: CSV file format might have changed...")
         return None
-    fi = CSVDataFile['KiteTrades']['FieldIndex']
+    fi = csvDF['KiteTrades']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
     tSymbol = fix_symbol(la[fi['INSTRUMENT']])
@@ -56,7 +51,7 @@ def _import_kite_trades_record(l, la):
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
 
 
-def _import_kite_openorders_record(l, la):
+def _import_kite_openorders_record(csvDF, l, la):
     """
     Import the csv file generated when exporting open orders from kite
     NOTE: Assumes that the open orders have not been partially fullfilled.
@@ -64,7 +59,7 @@ def _import_kite_openorders_record(l, la):
     if len(la) != 8:
         input("WARN:ImportKiteOpenOrders: CSV file format might have changed...")
         return None
-    fi = CSVDataFile['KiteOpenOrders']['FieldIndex']
+    fi = csvDF['KiteOpenOrders']['FieldIndex']
     tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
     tSymbol = fix_symbol(la[fi['INSTRUMENT']])
@@ -85,11 +80,10 @@ def _list_kite_openorders(db):
     print("{:16} : {}".format("TotalSell", numpy.sum(db[db[:,4]<0,4])))
 
 
-def _import_kite_header(f, csvType):
-    global CSVDataFile
+def _import_kite_header(csvDF, f, csvType):
     l = f.readline()
     l = l.upper()
-    la = csv2list(l, CSVDataFile[csvType]['delim'], CSVDataFile[csvType]['fieldProtectors'])
+    la = csv2list(l, csvDF[csvType]['delim'], csvDF[csvType]['fieldProtectors'])
     fi = {}
     for i in range(len(la)):
         if la[i].startswith("QTY"):
@@ -112,17 +106,17 @@ def _import_kite_header(f, csvType):
             fi['NETCHG'] = i
         elif la[i].find("DAY CHG") != -1:
             fi['DAYCHG'] = i
-    CSVDataFile[csvType]['FieldIndex'] = fi
+    csvDF[csvType]['FieldIndex'] = fi
 
 
-def _import_kite_holdings_record(l, la):
+def _import_kite_holdings_record(csvDF, l, la):
     """
     Import the csv file generated when exporting holdings from kite
     """
     if len(la) != 8:
         input("WARN:ImportKiteHoldings: CSV file format might have changed...")
         return None
-    fi = CSVDataFile['KiteHoldings']['FieldIndex']
+    fi = csvDF['KiteHoldings']['FieldIndex']
     tSymbol = fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].replace(",", ""))
     tAvgPrice = float(la[fi['AVGPRICE']].replace(",", ""))

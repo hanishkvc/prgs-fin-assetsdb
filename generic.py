@@ -4,9 +4,7 @@
 #
 
 
-def init(inCSVDataFile):
-    global CSVDataFile
-    CSVDataFile = inCSVDataFile
+def init(CSVDataFile):
     CSVDataFile['Generic'] = {
         'import_header': _import_header_skip,
         'import_record': _import_generic_record,
@@ -16,7 +14,7 @@ def init(inCSVDataFile):
         }
 
 
-def _import_generic_record(l, la):
+def _import_generic_record(csvDF, l, la):
     ra = []
     for c in la:
         try:
@@ -27,8 +25,8 @@ def _import_generic_record(l, la):
     return ra
 
 
-def _import_header_skip(f, csvType):
-    for i in range(CSVDataFile[csvType]['skipLinesAtBegin']):
+def _import_header_skip(csvDF, f, csvType):
+    for i in range(csvDF[csvType]['skipLinesAtBegin']):
         f.readline()
 
 
