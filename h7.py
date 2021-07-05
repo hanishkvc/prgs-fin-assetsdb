@@ -8,18 +8,19 @@ import time
 import numpy
 
 from hlpr import *
+import generic
 
 
 def init(CSVDataFile):
     CSVDataFile['H7O1'] = {
-        'import_header': _import_header_skip,
+        'import_header': generic._import_header_skip,
         'import_record': _import_o1_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
         'skipLinesAtBegin': 1,
         }
     CSVDataFile['H7Funds'] = {
-        'import_header': _import_header_skip,
+        'import_header': generic._import_header_skip,
         'import_record': _import_funds_record,
         'delim': ',',
         'fieldProtectors': [ '"', "'" ],
