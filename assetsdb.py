@@ -92,6 +92,7 @@ def list_stocks(db, filterStocks=[], bDetails=False):
     """
     totalSum = numpy.sum(db[:,IDBSTOCK['TRANSVALUE']])
     totalQty = numpy.sum(db[:,IDBSTOCK['QTY']])
+    stocksSummaryList = []
     stockNames = list_stocknames(db, False)
     print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
@@ -104,9 +105,11 @@ def list_stocks(db, filterStocks=[], bDetails=False):
                 t = s.copy()
                 t[IDBSTOCK['TRANSDATE']] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCK['TRANSDATE']])
                 print(t)
+        stocksSummaryList.append([ sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum ])
         print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
         if gbSpaceOutListing:
             print("")
+    return stocksSummaryList
 
 
 def startup_message():
