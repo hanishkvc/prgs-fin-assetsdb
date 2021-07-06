@@ -30,3 +30,17 @@ def _import_header_skip(csvDF, f, csvType):
         f.readline()
 
 
+def list(npa):
+    for cR in npa:
+        for cC in cR:
+            if type(cC) == str:
+                print("{:48}".format(cC), end=" ")
+            elif type(cC) == float:
+                print("{:10.2f}".format(cC), end=" ")
+            elif type(cC) == int:
+                print("{:10}".format(cC), end=" ")
+            else:
+                print(cC, end=" ")
+        print("\n")
+
+
