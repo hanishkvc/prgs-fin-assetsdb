@@ -4,6 +4,9 @@
 #
 
 
+import time
+
+
 def init(CSVDataFile):
     CSVDataFile['Generic'] = {
         'import_header': _import_header_skip,
@@ -39,6 +42,8 @@ def list(npa):
                 print("{:10.2f}".format(cC), end=" ")
             elif type(cC) == int:
                 print("{:10}".format(cC), end=" ")
+            elif type(cC) == time.struct_time:
+                print("{:12}".format(time.strftime("%Y%m%d", cC)), end=" ")
             else:
                 print(cC, end=" ")
         print("\n")
