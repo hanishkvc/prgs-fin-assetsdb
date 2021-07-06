@@ -71,10 +71,13 @@ def _import_kite_openorders_record(csvDF, l, la):
 
 
 def _list_kite_openorders(db):
+    theFormat = "{:32} {:8} {:8.2f} {:8.2f} {:8.2f}"
+    theHFormat = theFormat.replace(".2f","")
+    print(theHFormat.format("Symbol", "Qty", "Price", "LTP", "%Chg"), end="\n\n")
     tSum = 0
     for x in db:
         tSum += x[4]
-        print("{:32} {:8} {:8.2f} {:8.2f} {:8.2f}".format(x[1], x[3], x[2], x[5], (x[6]-1)*100), end="\n\n")
+        print(theFormat.format(x[1], x[3], x[2], x[5], (x[6]-1)*100), end="\n\n")
     print("{:16} : {}".format("TotalValue", tSum))
     print("{:16} : {}".format("TotalBuy", numpy.sum(db[db[:,4]>0,4])))
     print("{:16} : {}".format("TotalSell", numpy.sum(db[db[:,4]<0,4])))
