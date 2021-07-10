@@ -113,37 +113,37 @@ def list_assetnames(db, bPrint=True):
     return assetNames
 
 
-def _asset_summary(assets):
-    assetsBuy = assets[assets[:,IDB['QTY']] > 0]
-    assetsSell = assets[assets[:,IDB['QTY']] < 0]
-    assetSum = numpy.sum(assets[:,IDB['TRANSVALUE']])
-    assetBuyQty = numpy.sum(assetsBuy[:,IDB['QTY']])
-    assetBuyAvg = numpy.sum((assetsBuy[:,IDB['VALUE']]*assetsBuy[:,IDB['QTY']])/assetBuyQty)
-    assetSellQty = numpy.sum(assetsSell[:,IDB['QTY']])
-    assetSellAvg = numpy.sum((assetsSell[:,IDB['VALUE']]*assetsSell[:,IDB['QTY']])/assetSellQty)
-    return assetSum, [assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty]
+def _asset_summary_bsda(da):
+    daBuys = da[da[:,IBS['QTY']] > 0]
+    daSells = da[da[:,IBS['QTY']] < 0]
+    daSum = numpy.sum(da[:,IBS['TRANSVALUE']])
+    daBuysQty = numpy.sum(daBuys[:,IBS['QTY']])
+    daBuysAvg = numpy.sum((daBuys[:,IBS['PRICE']]*daBuys[:,IBS['QTY']])/daBuysQty)
+    daSellsQty = numpy.sum(daSells[:,IBS['QTY']])
+    daSellsAvg = numpy.sum((daSells[:,IBS['PRICE']]*daSells[:,IBS['QTY']])/daSellsQty)
+    return daSum, [daBuysAvg, daBuysQty], [daSellsAvg, daSellsQty]
 
 
-def list_assets(db, filterAssets=[], bDetails=False):
+def list_assets_bsda(da, filterAssets=[], bDetails=False):
     """
-    List the data about specified assets in the db.
-    db: the db containing data about assets
+    List the data about specified assets in the da.
+    da: the da containing data about assets
     filterAssets: a list of asset names or empty list.
     """
-    totalSum = numpy.sum(db[:,IDB['TRANSVALUE']])
-    totalQty = numpy.sum(db[:,IDB['QTY']])
+    totalSum = numpy.sum(da[:,IBS['TRANSVALUE']])
+    totalQty = numpy.sum(da[:,IBS['QTY']])
     assetsSummaryList = []
-    assetNames = list_assetnames(db, False)
+    assetNames = list_assetnames(da, False)
     print("GrandSummary: UniqAssetsCnt={:8}, NumOfAssets={:8}, TotalValue={:16.2f}".format(len(assetNames), totalQty, totalSum))
     for an in assetNames:
         if (len(filterAssets) > 0) and (an not in filterAssets):
             continue
-        assets = db[db[:,IDB['NAME']] == an]
-        assetSum, [ assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty] = _asset_summary(assets)
+        assets = da[da[:,IBS['NAME']] == an]
+        assetSum, [ assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty] = _asset_summary_bsda(assets)
         if bDetails:
             for s in assets:
                 t = s.copy()
-                t[IDB['TRANSDATE']] = t[IDB['TRANSDATE']].strftime("%Y%m%dIST%H%M")
+                t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
         assetsSummaryList.append([ an, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum ])
         print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(an, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum))
