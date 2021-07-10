@@ -9,7 +9,7 @@ import datetime
 import numpy
 
 
-IDBSTOCK = {
+IDB = {
     'NAME': 0,
     'BTRANSDATE': 1,
     'BPRICE': 2,
@@ -27,20 +27,23 @@ gbSpaceOutListing = True
 def _import_buy(db, ci):
     iDT = IDB['BTRANSDATE']
     iRow = -1
+    #print(type(db), db.shape, db)
     for cr in db:
         iRow += 1
         if cr[iDT].timestamp() < ci[iDT].timestamp():
             continue
-        db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
-        return db
+        break
+    db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
+    return db
 
 
 def import_da(db, da, daType="BUYSELL"):
     if type(db) == type(None): # Assuming its a BUY for now
-        db = numpy.array([[da[0], da[1], da[2], da[3], da[4], 0, 0, 0, 0]], dtype=object)
-        return db
+        print("WARN:ADB.ImportDB:Creating db...")
+        db = numpy.array([[da[0,0], da[0,1], da[0,2], da[0,3], da[0,4], 0, 0, 0, 0]], dtype=object)
+        da = da[1:]
     for ci in da:
-        if ci[IDB['QTY']] > 0:
+        if ci[IDB['BQTY']] > 0:
             db = _import_buy(db, ci)
         else:
             db = _import_sell(db, ci)
