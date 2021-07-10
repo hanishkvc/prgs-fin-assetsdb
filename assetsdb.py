@@ -20,7 +20,17 @@ import h7
 
 HISTORYFILE="./.assetsdb.history"
 
-IDBSTOCK = { 'TRANSDATE': 0, 'NAME': 1, 'VALUE': 2, 'QTY': 3, 'TRANSVALUE': 4 }
+IDBSTOCK = {
+    'NAME': 0,
+    'BTRANSDATE': 1,
+    'BPRICE': 2,
+    'BQTY': 3,
+    'BTRANSVALUE': 4,
+    'STRANSDATE': 5,
+    'SPRICE': 6,
+    'SQTY': 7,
+    'STRANSVALUE': 8
+    }
 
 gbSpaceOutListing = True
 
