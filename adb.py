@@ -100,55 +100,55 @@ def import_da(db, da, daType="BUYSELL"):
     return db
 
 
-def list_stocknames(da, bPrint=True):
+def list_assetnames(db, bPrint=True):
     """
-    Retrieve and optionally print the name of stocks in the da.
-    da: the da containing the stocks data.
+    Retrieve and optionally print the name of assets in the db.
+    db: the db containing the assets data.
     """
-    stockNames = numpy.unique(da[:,IDB['NAME']])
-    for i in range(len(stockNames)):
-        sn = stockNames[i]
+    assetNames = numpy.unique(da[:,IDB['NAME']])
+    for i in range(len(assetNames)):
+        sn = assetNames[i]
         if (bPrint):
             print("{:4}: {}".format(i,sn))
-    return stockNames
+    return assetNames
 
 
-def _stock_summary(stocks):
-    stocksBuy = stocks[stocks[:,IDB['QTY']] > 0]
-    stocksSell = stocks[stocks[:,IDB['QTY']] < 0]
-    stockSum = numpy.sum(stocks[:,IDB['TRANSVALUE']])
-    stockBuyQty = numpy.sum(stocksBuy[:,IDB['QTY']])
-    stockBuyAvg = numpy.sum((stocksBuy[:,IDB['VALUE']]*stocksBuy[:,IDB['QTY']])/stockBuyQty)
-    stockSellQty = numpy.sum(stocksSell[:,IDB['QTY']])
-    stockSellAvg = numpy.sum((stocksSell[:,IDB['VALUE']]*stocksSell[:,IDB['QTY']])/stockSellQty)
-    return stockSum, [stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty]
+def _asset_summary(assets):
+    assetsBuy = assets[assets[:,IDB['QTY']] > 0]
+    assetsSell = assets[assets[:,IDB['QTY']] < 0]
+    assetSum = numpy.sum(assets[:,IDB['TRANSVALUE']])
+    assetBuyQty = numpy.sum(assetsBuy[:,IDB['QTY']])
+    assetBuyAvg = numpy.sum((assetsBuy[:,IDB['VALUE']]*assetsBuy[:,IDB['QTY']])/assetBuyQty)
+    assetSellQty = numpy.sum(assetsSell[:,IDB['QTY']])
+    assetSellAvg = numpy.sum((assetsSell[:,IDB['VALUE']]*assetsSell[:,IDB['QTY']])/assetSellQty)
+    return assetSum, [assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty]
 
 
-def list_stocks(da, filterStocks=[], bDetails=False):
+def list_assets(db, filterStocks=[], bDetails=False):
     """
-    List the data about specified stocks in the da.
-    da: the da containing data about stocks
-    filterStocks: a list of stock names or empty list.
+    List the data about specified assets in the db.
+    db: the db containing data about assets
+    filterStocks: a list of asset names or empty list.
     """
-    totalSum = numpy.sum(da[:,IDB['TRANSVALUE']])
-    totalQty = numpy.sum(da[:,IDB['QTY']])
-    stocksSummaryList = []
-    stockNames = list_stocknames(da, False)
-    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(stockNames), totalQty, totalSum))
-    for sn in stockNames:
+    totalSum = numpy.sum(db[:,IDB['TRANSVALUE']])
+    totalQty = numpy.sum(db[:,IDB['QTY']])
+    assetsSummaryList = []
+    assetNames = list_assetnames(db, False)
+    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(assetNames), totalQty, totalSum))
+    for sn in assetNames:
         if (len(filterStocks) > 0) and (sn not in filterStocks):
             continue
-        stocks = da[da[:,IDB['NAME']] == sn]
-        stockSum, [ stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty] = _stock_summary(stocks)
+        assets = db[db[:,IDB['NAME']] == sn]
+        assetSum, [ assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty] = _asset_summary(assets)
         if bDetails:
-            for s in stocks:
+            for s in assets:
                 t = s.copy()
                 t[IDB['TRANSDATE']] = t[IDB['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
-        stocksSummaryList.append([ sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum ])
-        print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
+        assetsSummaryList.append([ sn, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum ])
+        print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum))
         if gbSpaceOutListing:
             print("")
-    return stocksSummaryList
+    return assetsSummaryList
 
 
