@@ -48,7 +48,7 @@ def _import_kite_trades_record(csvDF, l, la):
     tQty = int(la[fi['QTY']].replace(",", ""))*tType
     tUnitPrice = float(la[fi['PRICE']].replace(",", ""))
     tTotal = tUnitPrice*tQty
-    return [ tDate, tSymbol, tUnitPrice, tQty, tTotal ]
+    return [ tSymbol, tDate, tUnitPrice, tQty, tTotal ]
 
 
 def _import_kite_openorders_record(csvDF, l, la):
