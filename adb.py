@@ -49,6 +49,7 @@ def _import_sell(db, ci):
     iRow = -1
     iRemaining = -1*ci[IBS['QTY']]
     for cr in db:
+        iRow += 1
         if cr[IDB['NAME']] != ci[IBS['NAME']]:
             continue
         buyQty = cr[IDB['BQTY']]
@@ -70,7 +71,16 @@ def _import_sell(db, ci):
             cr[IDB['STRANSVALUE']] = ci[IBS['PRICE']]*cr[IDB['SQTY']]
             iRemaining = -1*iDelta
         else:
-            
+            cr[IDB['BQTY']] = iRemaining
+            cr[IDB['BTRANSVALUE']] = cr[IDB['BPRICE']]*cr[IDB['BQTY']]
+            cr[IDB['STRANSDATE']] = ci[IBS['TRANSDATE']]
+            cr[IDB['SPRICE']] = ci[IBS['PRICE']]
+            cr[IDB['SQTY']] = iRemaining
+            cr[IDB['STRANSVALUE']] = ci[IBS['PRICE']]*cr[IDB['SQTY']]
+            iRemaining = 0
+            db = numpy.insert(db, iRow, numpy.array([cr[0],cr[1],cr[2],iDelta,cr[2]*iDelta,0,0,0,0]), 0)
+            return db
+
 
 def import_da(db, da, daType="BUYSELL"):
     if type(db) == type(None): # Assuming its a BUY for now
