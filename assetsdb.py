@@ -27,7 +27,7 @@ gbSpaceOutListing = True
 CSVDataFile = { }
 
 
-def import_csv(csvType, sFile, db=None):
+def import_csv(csvType, sFile, da=None):
     """
     Import csv file main flow
     csvType: Specifies the type of csv file to import, which is used to get details like
@@ -36,7 +36,7 @@ def import_csv(csvType, sFile, db=None):
         the number of lines to skip, if any at the begining.
         the function used to infer the data in each line of the csv file.
     sFile: the file to import
-    db: optional db to load the data into. If None, then a new db is created.
+    da: optional da to load the data into. If None, then a new da is created.
     """
     f = open(sFile)
     CSVDataFile[csvType]['import_header'](CSVDataFile, f, csvType)
@@ -49,23 +49,23 @@ def import_csv(csvType, sFile, db=None):
             if (type(la) == type(None)):
                 continue
             dprint("INFO:ImportCSV:{}".format(la), gDEBUGLVLINFO)
-            if (type(db) == type(None)):
-                db = numpy.array(la, dtype=object)
+            if (type(da) == type(None)):
+                da = numpy.array(la, dtype=object)
             else:
-                db = numpy.vstack((db, numpy.array(la, dtype=object)))
+                da = numpy.vstack((da, numpy.array(la, dtype=object)))
         except:
             #print(sys.exc_info())
             traceback.print_exc()
             input("ERRR:ImportCSV:{}".format(la))
-    return db
+    return da
 
 
-def list_stocknames(db, bPrint=True):
+def list_stocknames(da, bPrint=True):
     """
-    Retrieve and optionally print the name of stocks in the db.
-    db: the db containing the stocks data.
+    Retrieve and optionally print the name of stocks in the da.
+    da: the da containing the stocks data.
     """
-    stockNames = numpy.unique(db[:,IDBSTOCK['NAME']])
+    stockNames = numpy.unique(da[:,IDBSTOCK['NAME']])
     for i in range(len(stockNames)):
         sn = stockNames[i]
         if (bPrint):
@@ -84,21 +84,21 @@ def _stock_summary(stocks):
     return stockSum, [stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty]
 
 
-def list_stocks(db, filterStocks=[], bDetails=False):
+def list_stocks(da, filterStocks=[], bDetails=False):
     """
-    List the data about specified stocks in the db.
-    db: the db containing data about stocks
+    List the data about specified stocks in the da.
+    da: the da containing data about stocks
     filterStocks: a list of stock names or empty list.
     """
-    totalSum = numpy.sum(db[:,IDBSTOCK['TRANSVALUE']])
-    totalQty = numpy.sum(db[:,IDBSTOCK['QTY']])
+    totalSum = numpy.sum(da[:,IDBSTOCK['TRANSVALUE']])
+    totalQty = numpy.sum(da[:,IDBSTOCK['QTY']])
     stocksSummaryList = []
-    stockNames = list_stocknames(db, False)
+    stockNames = list_stocknames(da, False)
     print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(stockNames), totalQty, totalSum))
     for sn in stockNames:
         if (len(filterStocks) > 0) and (sn not in filterStocks):
             continue
-        stocks = db[db[:,IDBSTOCK['NAME']] == sn]
+        stocks = da[da[:,IDBSTOCK['NAME']] == sn]
         stockSum, [ stockBuyAvg, stockBuyQty], [stockSellAvg, stockSellQty] = _stock_summary(stocks)
         if bDetails:
             for s in stocks:

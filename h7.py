@@ -72,9 +72,9 @@ def _import_funds_record(csvDF, l, la):
     return [ tDate, tAmount ]
 
 
-def _list_funds(db):
+def _list_funds(da):
     tSum = 0
-    for x in db:
+    for x in da:
         tSum += x[1]
         tDate = time.strftime("%Y%m%dIST%H%M", x[0])
         print("{:16} {:8.2f}".format(tDate, x[1]), end="\n\n")

@@ -70,17 +70,17 @@ def _import_kite_openorders_record(csvDF, l, la):
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal, tLTP, round(tUnitPrice/tLTP,4) ]
 
 
-def _list_kite_openorders(db):
+def _list_kite_openorders(da):
     theFormat = "{:32} {:8} {:8.2f} {:8.2f} {:8.2f}"
     theHFormat = theFormat.replace(".2f","")
     print(theHFormat.format("Symbol", "Qty", "Price", "LTP", "%Chg"), end="\n\n")
     tSum = 0
-    for x in db:
+    for x in da:
         tSum += x[4]
         print(theFormat.format(x[1], x[3], x[2], x[5], (x[6]-1)*100), end="\n\n")
     print("{:16} : {}".format("TotalValue", tSum))
-    print("{:16} : {}".format("TotalBuy", numpy.sum(db[db[:,4]>0,4])))
-    print("{:16} : {}".format("TotalSell", numpy.sum(db[db[:,4]<0,4])))
+    print("{:16} : {}".format("TotalBuy", numpy.sum(da[da[:,4]>0,4])))
+    print("{:16} : {}".format("TotalSell", numpy.sum(da[da[:,4]<0,4])))
 
 
 def _import_kite_header(csvDF, f, csvType):
@@ -136,12 +136,12 @@ def _import_kite_holdings_record(csvDF, l, la):
     return [ tSymbol, tLTP, tAvgPrice, tQty, tCurValue, tNetChg, tDayChg ]
 
 
-def _list_kite_holdings(db, sortBy=-2, mayBeAdj=0.98):
+def _list_kite_holdings(da, sortBy=-2, mayBeAdj=0.98):
     theFormat = "{:32} {:8.2f} {:8.2f} {:8} {:8.2f} {:8.2f} {:8.2f} {:8.2f}"
-    dbN = db[numpy.argsort(db[:,sortBy])]
+    daN = da[numpy.argsort(da[:,sortBy])]
     theHFormat = theFormat.replace(".2f","")
     print(theHFormat.format("Symbol", "LTP", "AvgPrice", "Qty", "CurVal", "NetChg", "DayChg", "MayBe"), end="\n\n")
-    for x in dbN:
+    for x in daN:
         tMayBe = x[1]*mayBeAdj
         print(theFormat.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], tMayBe), end="\n\n")
 
