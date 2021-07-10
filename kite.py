@@ -4,7 +4,7 @@
 #
 
 
-import time
+import datetime
 import numpy
 
 from hlpr import *
@@ -42,7 +42,7 @@ def _import_kite_trades_record(csvDF, l, la):
         input("WARN:ImportKiteTrades: CSV file format might have changed...")
         return None
     fi = csvDF['KiteTrades']['FieldIndex']
-    tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
+    tDate = datetime.datetime.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
     tSymbol = fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].replace(",", ""))*tType
@@ -60,7 +60,7 @@ def _import_kite_openorders_record(csvDF, l, la):
         input("WARN:ImportKiteOpenOrders: CSV file format might have changed...")
         return None
     fi = csvDF['KiteOpenOrders']['FieldIndex']
-    tDate = time.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
+    tDate = datetime.datetime.strptime(la[fi['TIME']], "%Y-%m-%d %H:%M:%S")
     tType = 1 if (la[fi['TYPE']] == 'BUY') else -1
     tSymbol = fix_symbol(la[fi['INSTRUMENT']])
     tQty = int(la[fi['QTY']].split('/')[1].replace(",", ""))*tType

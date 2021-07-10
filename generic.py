@@ -4,7 +4,7 @@
 #
 
 
-import time
+import datetime
 
 
 def init_csv(CSVDataFile):
@@ -42,8 +42,8 @@ def list(npa):
                 print("{:10.2f}".format(cC), end=" ")
             elif type(cC) == int:
                 print("{:10}".format(cC), end=" ")
-            elif type(cC) == time.struct_time:
-                print("{:16}".format(time.strftime("%Y%m%dT%H%M", cC)), end=" ")
+            elif type(cC) == datetime.datetime:
+                print("{:16}".format(cC.strftime("%Y%m%dT%H%M")), end=" ")
             else:
                 print(cC, end=" ")
         print("\n")

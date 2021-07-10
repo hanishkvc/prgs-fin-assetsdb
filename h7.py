@@ -4,7 +4,7 @@
 #
 
 
-import time
+import datetime
 import numpy
 
 from hlpr import *
@@ -30,7 +30,7 @@ def init_csv(CSVDataFile):
 
 
 def _handle_asset_csv_o1(la):
-    tDate = time.strptime(la[1], "%Y%m%dIST%H%M")
+    tDate = datetime.datetime.strptime(la[1], "%Y%m%dIST%H%M")
     tSymbol = fix_symbol(la[2])
     tTotal = float(la[3].replace(",",""))
     tValue = float(la[4].replace(",", ""))
@@ -67,7 +67,7 @@ def _import_funds_record(csvDF, l, la):
         input("WARN:ImportFunds: CSV file format might have changed...")
         return None
     fi = csvDF['Funds']['FieldIndex']
-    tDate = time.strptime(la[fi['TIME']], "%Y%m%dIST%H%M")
+    tDate = datetime.datetime.strptime(la[fi['TIME']], "%Y%m%dIST%H%M")
     tAmount = float(la[fi['AMOUNT']].replace(",", ""))
     return [ tDate, tAmount ]
 
@@ -76,7 +76,7 @@ def list_funds(da):
     tSum = 0
     for x in da:
         tSum += x[1]
-        tDate = time.strftime("%Y%m%dIST%H%M", x[0])
+        tDate = x[0].strftime("%Y%m%dIST%H%M")
         print("{:16} {:8.2f}".format(tDate, x[1]), end="\n\n")
     print("{:16} : {}".format("TotalValue", tSum))
 

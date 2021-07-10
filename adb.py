@@ -4,6 +4,11 @@
 # GPL
 #
 
+
+import datetime
+import numpy
+
+
 IDBSTOCK = {
     'NAME': 0,
     'BTRANSDATE': 1,
@@ -17,6 +22,29 @@ IDBSTOCK = {
     }
 
 gbSpaceOutListing = True
+
+
+def _import_buy(db, ci):
+    iDT = IDB['BTRANSDATE']
+    iRow = -1
+    for cr in db:
+        iRow += 1
+        if cr[iDT].timestamp() < ci[iDT].timestamp():
+            continue
+        db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
+        return db
+
+
+def import_da(db, da, daType="BUYSELL"):
+    if type(db) == type(None): # Assuming its a BUY for now
+        db = numpy.array([[da[0], da[1], da[2], da[3], da[4], 0, 0, 0, 0]], dtype=object)
+        return db
+    for ci in da:
+        if ci[IDB['QTY']] > 0:
+            db = _import_buy(db, ci)
+        else:
+            db = _import_sell(db, ci)
+    return db
 
 
 def list_stocknames(da, bPrint=True):
@@ -62,7 +90,7 @@ def list_stocks(da, filterStocks=[], bDetails=False):
         if bDetails:
             for s in stocks:
                 t = s.copy()
-                t[IDBSTOCK['TRANSDATE']] = time.strftime("%Y%m%dIST%H%M", t[IDBSTOCK['TRANSDATE']])
+                t[IDBSTOCK['TRANSDATE']] = t[IDBSTOCK['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
         stocksSummaryList.append([ sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum ])
         print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, stockBuyAvg, stockBuyQty, stockSellAvg, stockSellQty, stockSum))
