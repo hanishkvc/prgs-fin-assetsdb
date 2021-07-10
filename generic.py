@@ -43,7 +43,7 @@ def list(npa):
             elif type(cC) == int:
                 print("{:10}".format(cC), end=" ")
             elif type(cC) == time.struct_time:
-                print("{:12}".format(time.strftime("%Y%m%d", cC)), end=" ")
+                print("{:16}".format(time.strftime("%Y%m%d%Z%H%M", cC)), end=" ")
             else:
                 print(cC, end=" ")
         print("\n")
