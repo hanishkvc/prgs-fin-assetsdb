@@ -36,11 +36,15 @@ def _import_buy(db, ci):
     iDT = IDB['BTRANSDATE']
     iRow = -1
     #print(type(db), db.shape, db)
+    bBreak = False
     for cr in db:
         iRow += 1
-        if cr[iDT].timestamp() < ci[iDT].timestamp():
+        if cr[iDT].timestamp() <= ci[iDT].timestamp():
             continue
+        bBreak = True
         break
+    if not bBreak:
+        iRow += 1
     db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
     return db
 
@@ -83,6 +87,7 @@ def _import_sell(db, ci):
 
 
 def import_da(db, da, daType="BUYSELL"):
+    #breakpoint()
     if type(db) == type(None): # Assuming its a BUY for now
         print("WARN:ADB.ImportDB:Creating db...")
         db = numpy.array([[da[0,0], da[0,1], da[0,2], da[0,3], da[0,4], 0, 0, 0, 0]], dtype=object)
