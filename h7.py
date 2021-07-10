@@ -72,7 +72,7 @@ def _import_funds_record(csvDF, l, la):
     return [ tDate, tAmount ]
 
 
-def _list_funds(da):
+def list_funds(da):
     tSum = 0
     for x in da:
         tSum += x[1]

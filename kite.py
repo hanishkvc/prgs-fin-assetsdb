@@ -70,7 +70,7 @@ def _import_kite_openorders_record(csvDF, l, la):
     return [ tDate, tSymbol, tUnitPrice, tQty, tTotal, tLTP, round(tUnitPrice/tLTP,4) ]
 
 
-def _list_kite_openorders(da):
+def list_kite_openorders(da):
     theFormat = "{:32} {:8} {:8.2f} {:8.2f} {:8.2f}"
     theHFormat = theFormat.replace(".2f","")
     print(theHFormat.format("Symbol", "Qty", "Price", "LTP", "%Chg"), end="\n\n")
@@ -136,7 +136,7 @@ def _import_kite_holdings_record(csvDF, l, la):
     return [ tSymbol, tLTP, tAvgPrice, tQty, tCurValue, tNetChg, tDayChg ]
 
 
-def _list_kite_holdings(da, sortBy=-2, mayBeAdj=0.98):
+def list_kite_holdings(da, sortBy=-2, mayBeAdj=0.98):
     theFormat = "{:32} {:8.2f} {:8.2f} {:8} {:8.2f} {:8.2f} {:8.2f} {:8.2f}"
     daN = da[numpy.argsort(da[:,sortBy])]
     theHFormat = theFormat.replace(".2f","")
