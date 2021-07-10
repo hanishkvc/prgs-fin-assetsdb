@@ -10,7 +10,7 @@ import numpy
 from hlpr import *
 
 
-def init(CSVDataFile):
+def init_csv(CSVDataFile):
     CSVDataFile['KiteTrades'] = {
         'import_header': _import_kite_header,
         'import_record': _import_kite_trades_record,

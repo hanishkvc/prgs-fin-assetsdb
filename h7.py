@@ -11,7 +11,7 @@ from hlpr import *
 import generic
 
 
-def init(CSVDataFile):
+def init_csv(CSVDataFile):
     CSVDataFile['H7O1'] = {
         'import_header': generic._import_header_skip,
         'import_record': _import_o1_record,

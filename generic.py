@@ -7,7 +7,7 @@
 import time
 
 
-def init(CSVDataFile):
+def init_csv(CSVDataFile):
     CSVDataFile['Generic'] = {
         'import_header': _import_header_skip,
         'import_record': _import_generic_record,

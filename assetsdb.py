@@ -35,8 +35,6 @@ IDBSTOCK = {
 
 gbSpaceOutListing = True
 
-CSVDataFile = { }
-
 
 def list_stocknames(da, bPrint=True):
     """
@@ -96,9 +94,7 @@ def startup_message():
 
 
 def startup():
-    generic.init(CSVDataFile)
-    h7.init(CSVDataFile)
-    kite.init(CSVDataFile)
+    csv.init()
     readline.parse_and_bind("tab: complete")
     startup_message()
 

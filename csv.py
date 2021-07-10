@@ -4,6 +4,17 @@
 # GPL
 #
 
+import numpy
+import traceback
+
+from hlpr import *
+import generic
+import h7
+import kite
+
+
+CSVDataFile = { }
+
 
 def import_csv(csvType, sFile, da=None):
     """
@@ -36,5 +47,11 @@ def import_csv(csvType, sFile, da=None):
             traceback.print_exc()
             input("ERRR:ImportCSV:{}".format(la))
     return da
+
+
+def init():
+    generic.init_csv(CSVDataFile)
+    h7.init_csv(CSVDataFile)
+    kite.init_csv(CSVDataFile)
 
 
