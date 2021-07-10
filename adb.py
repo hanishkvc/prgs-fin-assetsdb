@@ -21,6 +21,14 @@ IDB = {
     'STRANSVALUE': 8
     }
 
+IBS = {
+    'NAME': 0,
+    'TRANSDATE': 1,
+    'PRICE': 2,
+    'QTY': 3,
+    'TRANSVALUE': 4,
+    }
+
 gbSpaceOutListing = True
 
 
@@ -35,6 +43,27 @@ def _import_buy(db, ci):
         break
     db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
     return db
+
+
+def _import_sell(db, ci):
+    iRow = -1
+    iRemaining = ci[IBS['QTY']]
+    for cr in db:
+        if cr[IDB['NAME']] != ci[IBS['NAME']]:
+            continue
+        buyQty = cr[IDB['BQTY']]
+        sellQty = cr[IDB['SQTY']]
+        iDelta = buyQty - sellQty
+        if (iDelta <= 0):
+            continue
+        iDelta = iDelta + iRemaining
+        if iDelta == 0:
+            cr[IDB['STRANSDATE']] = ci[IBS['TRANSDATE']]
+            cr[IDB['SPRICE']] = ci[IBS['PRICE']]
+            cr[IDB['SQTY']] = ci[IBS['QTY']]
+            cr[IDB['STRANSVALUE']] = ci[IBS['TRANSVALUE']]
+            return db
+        elif iDelta < 0:
 
 
 def import_da(db, da, daType="BUYSELL"):
