@@ -105,11 +105,11 @@ def list_assetnames(db, bPrint=True):
     Retrieve and optionally print the name of assets in the db.
     db: the db containing the assets data.
     """
-    assetNames = numpy.unique(da[:,IDB['NAME']])
+    assetNames = numpy.unique(db[:,IDB['NAME']])
     for i in range(len(assetNames)):
-        sn = assetNames[i]
+        an = assetNames[i]
         if (bPrint):
-            print("{:4}: {}".format(i,sn))
+            print("{:4}: {}".format(i,an))
     return assetNames
 
 
@@ -124,29 +124,29 @@ def _asset_summary(assets):
     return assetSum, [assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty]
 
 
-def list_assets(db, filterStocks=[], bDetails=False):
+def list_assets(db, filterAssets=[], bDetails=False):
     """
     List the data about specified assets in the db.
     db: the db containing data about assets
-    filterStocks: a list of asset names or empty list.
+    filterAssets: a list of asset names or empty list.
     """
     totalSum = numpy.sum(db[:,IDB['TRANSVALUE']])
     totalQty = numpy.sum(db[:,IDB['QTY']])
     assetsSummaryList = []
     assetNames = list_assetnames(db, False)
-    print("GrandSummary: NumOfCompanies={:8}, NumOfStocks={:8}, TotalValue={:16.2f}".format(len(assetNames), totalQty, totalSum))
-    for sn in assetNames:
-        if (len(filterStocks) > 0) and (sn not in filterStocks):
+    print("GrandSummary: UniqAssetsCnt={:8}, NumOfAssets={:8}, TotalValue={:16.2f}".format(len(assetNames), totalQty, totalSum))
+    for an in assetNames:
+        if (len(filterAssets) > 0) and (an not in filterAssets):
             continue
-        assets = db[db[:,IDB['NAME']] == sn]
+        assets = db[db[:,IDB['NAME']] == an]
         assetSum, [ assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty] = _asset_summary(assets)
         if bDetails:
             for s in assets:
                 t = s.copy()
                 t[IDB['TRANSDATE']] = t[IDB['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
-        assetsSummaryList.append([ sn, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum ])
-        print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(sn, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum))
+        assetsSummaryList.append([ an, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum ])
+        print("{:48} : {:10.2f} x {:8} : {:10.2f} x {:8} : {:16.2f}".format(an, assetBuyAvg, assetBuyQty, assetSellAvg, assetSellQty, assetSum))
         if gbSpaceOutListing:
             print("")
     return assetsSummaryList
