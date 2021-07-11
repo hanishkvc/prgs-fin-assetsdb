@@ -155,10 +155,24 @@ def list_assets_bsda(da, filterAssets=[], bDetails=False):
 def _dba_summary(dba):
     bSum = numpy.sum(dba[:,IDB['BTRANSVALUE']])
     bQty = numpy.sum(dba[:,IDB['BQTY']])
-    bAvg = bSum/bQty
+    if (bQty == 0):
+        if (bSum == 0):
+            bAvg = 0
+        else:
+            bAvg = numpy.nan
+            input("WARN:DBASummary:BuySum {} without BuyQty {}".format(bSum, bQty))
+    else:
+        bAvg = bSum/bQty
     sSum = numpy.sum(dba[:,IDB['STRANSVALUE']])
     sQty = numpy.sum(dba[:,IDB['SQTY']])
-    sAvg = sSum/sQty
+    if (sQty == 0):
+        if (sSum == 0):
+            sAvg = 0
+        else:
+            sAvg = numpy.nan
+            input("WARN:DBASummary:SellSum {} without SellQty {}".format(sSum, sQty))
+    else:
+        sAvg = sSum/sQty
     return [bAvg, bQty, bSum], [sAvg, sQty, sSum]
 
 
