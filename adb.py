@@ -189,12 +189,13 @@ def list_assets(db, filterAssets=[], bDetails=False):
     """
     dba = db
     dbaInHand = dba[dba[:,IDB['SQTY']] == 0]
+    atAssetNames = list_assetnames(dba, False)
     ihAssetNames = list_assetnames(dbaInHand, False)
     ihUniqAssetsCnt = len(ihAssetNames)
     [ihTBAvg, ihTBQty, ihTBSum], [ihTSAvg, ihTSQty, ihTSSum] = _dba_summary(dbaInHand)  # In hand totals
     print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
     assetsSummaryList = []
-    for an in ihAssetNames:
+    for an in atAssetNames:
         if (len(filterAssets) > 0) and (an not in filterAssets):
             continue
         atAssets = dba[dba[:,IDB['NAME']] == an]                # All total of a asset
