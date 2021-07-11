@@ -54,9 +54,7 @@ def init_scripts(srcFiles):
         exec(src, globals())
 
 
-def runme():
-    init_scripts(sys.argv[1:])
-    load_history(HISTORYFILE)
+def _runme():
     while True:
         try:
             bDoExec = False
@@ -86,6 +84,12 @@ def runme():
                 break;
             #print("ERRR:", sys.exc_info())
             traceback.print_exc()
+
+
+def runme():
+    init_scripts(sys.argv[1:])
+    load_history(HISTORYFILE)
+    _runme()
     save_history(HISTORYFILE)
 
 
