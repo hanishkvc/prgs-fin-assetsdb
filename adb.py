@@ -199,6 +199,8 @@ def list_assets(db, filterAssets=[], bDetails=False):
             continue
         atAssets = dba[dba[:,IDB['NAME']] == an]                # All total of a asset
         ihAssets = dbaInHand[dbaInHand[:,IDB['NAME']] == an]    # In hand of a asset
+        prevAssets = atAssets[atAssets[:,IDB['SQTY']] > 0]
+        profitLoss = numpy.sum(prevAssets[:,IDB['STRANSVALUE']] - prevAssets[:,IDB['BTRANSVALUE']])
         [atBAvg, atBQty, atBSum], [atSAvg, atSQty, atSSum] = _dba_summary(atAssets)
         [ihBAvg, ihBQty, ihBSum], [ihSAvg, ihSQty, ihSSum] = _dba_summary(ihAssets)
         if bDetails:
@@ -206,8 +208,8 @@ def list_assets(db, filterAssets=[], bDetails=False):
                 t = s.copy()
                 #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
-        assetsSummaryList.append([ an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum ])
-        print("{:48} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum))
+        assetsSummaryList.append([ an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum, profitLoss ])
+        print("{:48} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f} : {:10.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum, profitLoss))
         if gbSpaceOutListing:
             print("")
     print("GrandSummary: UniqAssetsCnt={:8}, QtysInHand={:8}, InHandInvestedValue={:16.2f}".format(uniqAssetsCnt, ihTBQty, ihTBSum))
