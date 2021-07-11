@@ -62,8 +62,10 @@ def runme():
             bDoExec = False
             try:
                 toRun = ""
+                thePrompt = "$"
                 while True:
-                    got = input("$")
+                    got = input(thePrompt)
+                    thePrompt = " "
                     if (got != ""):
                         if (got[-1] != "\\"):
                             toRun += got
