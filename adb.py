@@ -50,6 +50,10 @@ def _import_buy(db, ci):
 
 
 def _import_sell(db, ci):
+    """
+    Insert the given sell transaction into the db, by matching it with related
+    buy transactions (going from oldest to latest buy transactions).
+    """
     iRow = -1
     iRemaining = -1*ci[IBS['QTY']]
     for cr in db:
@@ -84,6 +88,7 @@ def _import_sell(db, ci):
             iRemaining = 0
             db = numpy.insert(db, iRow, numpy.array([cr[0],cr[1],cr[2],iDelta,cr[2]*iDelta,0,0,0,0]), 0)
             return db
+    input("WARN:ImportSell:OpenShortedAssetNotSupported:", ci)
 
 
 def import_da(db, da, daType="BUYSELL"):
