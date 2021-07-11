@@ -152,3 +152,45 @@ def list_assets_bsda(da, filterAssets=[], bDetails=False):
     return assetsSummaryList
 
 
+def _dba_summary(dba):
+    bSum = numpy.sum(dba[:,IDB['BTRANSVALUE']])
+    bQty = numpy.sum(dba[:,IDB['BQTY']])
+    bAvg = bSum/bQty
+    sSum = numpy.sum(dba[:,IDB['STRANSVALUE']])
+    sQty = numpy.sum(dba[:,IDB['SQTY']])
+    sAvg = sSum/sQty
+    return [bAvg, bQty, bSum], [sAvg, sQty, sSum]
+
+
+def list_assets(db, filterAssets=[], bDetails=False):
+    """
+    List the data about specified assets in the db.
+    db: the db containing data about assets
+    filterAssets: a list of asset names or empty list.
+    """
+    dba = db
+    dbaInHand = dba[dba[:,IDB['SQTY']] == 0]
+    assetNames = list_assetnames(dbaInHand, False)
+    uniqAssetsCnt = len(assetNames)
+    [ihBAvg, ihBQty, ihBSum], [ihSAvg, ihSQty, ihSSum] = _dba_summary(dbaInHand)
+    print("GrandSummary: UniqAssetsCnt={:8}, QtysInHand={:8}, InHandInvestedValue={:16.2f}".format(uniqAssetsCnt, ihBQty, ihBSum))
+    assetsSummaryList = []
+    for an in assetNames:
+        if (len(filterAssets) > 0) and (an not in filterAssets):
+            continue
+        atAssets = dba[dba[:,IDB['NAME']] == an]
+        ihAssets = dbaInHand[dbaInHand[:,IDB['NAME']] == an]
+        [atBAvg, atBQty, atBSum], [atSAvg, atSQty, atSSum] = _dba_summary(atAssets)
+        [ihBAvg, ihBQty, ihBSum], [ihSAvg, ihSQty, ihSSum] = _dba_summary(ihAssets)
+        if bDetails:
+            for s in atAssets:
+                t = s.copy()
+                #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
+                print(t)
+        assetsSummaryList.append([ an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum ])
+        print("{:48} :+: {:10.2f} x {:8} :-: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum))
+        if gbSpaceOutListing:
+            print("")
+    return assetsSummaryList
+
+
