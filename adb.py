@@ -189,12 +189,12 @@ def list_assets(db, filterAssets=[], bDetails=False):
     """
     dba = db
     dbaInHand = dba[dba[:,IDB['SQTY']] == 0]
-    assetNames = list_assetnames(dbaInHand, False)
-    uniqAssetsCnt = len(assetNames)
+    ihAssetNames = list_assetnames(dbaInHand, False)
+    ihUniqAssetsCnt = len(ihAssetNames)
     [ihTBAvg, ihTBQty, ihTBSum], [ihTSAvg, ihTSQty, ihTSSum] = _dba_summary(dbaInHand)  # In hand totals
-    print("GrandSummary: UniqAssetsCnt={:8}, QtysInHand={:8}, InHandInvestedValue={:16.2f}".format(uniqAssetsCnt, ihTBQty, ihTBSum))
+    print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
     assetsSummaryList = []
-    for an in assetNames:
+    for an in ihAssetNames:
         if (len(filterAssets) > 0) and (an not in filterAssets):
             continue
         atAssets = dba[dba[:,IDB['NAME']] == an]                # All total of a asset
@@ -212,7 +212,7 @@ def list_assets(db, filterAssets=[], bDetails=False):
         print("{:48} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f} : {:10.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum, profitLoss))
         if gbSpaceOutListing:
             print("")
-    print("GrandSummary: UniqAssetsCnt={:8}, QtysInHand={:8}, InHandInvestedValue={:16.2f}".format(uniqAssetsCnt, ihTBQty, ihTBSum))
+    print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
     return assetsSummaryList
 
 
