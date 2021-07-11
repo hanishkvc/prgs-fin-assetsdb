@@ -39,13 +39,11 @@ def list(npa):
             if type(cC) == str:
                 print("{:48}".format(cC), end=" ")
             elif type(cC) == float:
-                print("{:10.2f}".format(cC), end=" ")
-            elif type(cC) == int:
-                print("{:10}".format(cC), end=" ")
+                print("{:13.2f}".format(cC), end=" ")
             elif type(cC) == datetime.datetime:
-                print("{:16}".format(cC.strftime("%Y%m%dT%H%M")), end=" ")
+                print("{:13}".format(cC.strftime("%Y%m%dT%H%M")), end=" ")
             else:
-                print(cC, end=" ")
+                print("{:13}".format(cC), end=" ")
         print("\n")
 
 
