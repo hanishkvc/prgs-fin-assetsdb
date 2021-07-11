@@ -61,7 +61,17 @@ def runme():
         try:
             bDoExec = False
             try:
-                toRun = input("$")
+                toRun = ""
+                while True:
+                    got = input("$")
+                    if (got != ""):
+                        if (got[-1] != "\\"):
+                            toRun += got
+                            break
+                        else:
+                            toRun += (got[:-1] + "\n")
+                    else:
+                        break
                 res = eval(toRun)
             except SyntaxError:
                 bDoExec = True
