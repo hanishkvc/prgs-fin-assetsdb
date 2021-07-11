@@ -202,7 +202,7 @@ def list_assets(db, filterAssets=[], bDetails=False):
                 #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
         assetsSummaryList.append([ an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum ])
-        print("{:48} :+: {:10.2f} x {:8} :-: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum))
+        print("{:48} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum))
         if gbSpaceOutListing:
             print("")
     return assetsSummaryList
