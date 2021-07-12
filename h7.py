@@ -66,7 +66,7 @@ def _import_funds_record(csvDF, l, la):
     if len(la) != 2:
         input("WARN:ImportFunds: CSV file format might have changed...")
         return None
-    fi = csvDF['Funds']['FieldIndex']
+    fi = csvDF['H7Funds']['FieldIndex']
     tDate = datetime.datetime.strptime(la[fi['TIME']], "%Y%m%dIST%H%M")
     tAmount = float(la[fi['AMOUNT']].replace(",", ""))
     return [ tDate, tAmount ]
