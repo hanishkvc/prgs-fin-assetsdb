@@ -46,8 +46,16 @@ def csv2list(inL, delim=DELIMITER, fieldProtectors = FIELDPROTECTORS):
 
 
 SymbolMap = {
-        'SUBEXLTD': 'SUBEX'
+        'SEARCH55AA': 'REPLACEAA55'
         }
+
+
+def symbolmap_append(inMap):
+    global SymbolMap
+    for k in inMap:
+        SymbolMap[k] = inMap[k]
+
+
 def fix_symbol(symbol):
     if symbol.endswith("-BE"):
         symbol = symbol[:-3]
