@@ -64,3 +64,9 @@ def fix_symbol(symbol):
     return symbol
 
 
+def print_dict(d, msg=None):
+    if msg:
+        print(msg)
+    for k in d:
+        print("{}:\n\t{}".format(k,d[k]))
+
