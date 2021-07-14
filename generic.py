@@ -33,10 +33,30 @@ def _import_header_skip(csvDF, f, csvType):
         f.readline()
 
 
-def list(npa):
+def list(npa, fieldTypes=None):
+    """
+    List the contents of the 2D array passed to this function.
+    fieldTypes:
+        if not None, it should be a string of chars,
+        which specify the type of each field in the row.
+            S: string field
+            F: float field
+            O: query field value to find the field type
+        if None, then query field value to find the field type
+    """
     for cR in npa:
+        iF = -1
         for cC in cR:
-            cT = type(cC)
+            iF += 1
+            if fieldTypes == None:
+                cT = type(cC)
+            else:
+                if fieldTypes[iF] == 'S':
+                    cT = str
+                elif fieldTypes[iF] == 'F':
+                    cT = float
+                elif fieldTypes[iF] == 'O':
+                    cT = type(cC)
             if cT == str:
                 print("{:48}".format(cC), end=" ")
             elif cT == float:
