@@ -209,8 +209,8 @@ def list_assets(db, filterAssets=[], bDetails=False):
                 t = s.copy()
                 #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
-        assetsSummaryList.append([ an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum, profitLoss ])
-        print("{:48} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :c: {:10.2f} x {:8} = {:16.2f} : {:10.2f}".format(an, atBAvg, atBQty, atSAvg, atSQty, ihBAvg, ihBQty, ihBSum, profitLoss))
+        assetsSummaryList.append([ an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, profitLoss ])
+        print("{:48} :c: {:10.2f} x {:8} = {:16.2f} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :PL: {:10.2f}".format(an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, profitLoss))
         if gbSpaceOutListing:
             print("")
     print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
