@@ -36,11 +36,12 @@ def _import_header_skip(csvDF, f, csvType):
 def list(npa):
     for cR in npa:
         for cC in cR:
-            if type(cC) == str:
+            cT = type(cC)
+            if cT == str:
                 print("{:48}".format(cC), end=" ")
-            elif type(cC) == float:
+            elif cT == float:
                 print("{:13.2f}".format(cC), end=" ")
-            elif type(cC) == datetime.datetime:
+            elif cT == datetime.datetime:
                 print("{:13}".format(cC.strftime("%Y%m%dT%H%M")), end=" ")
             else:
                 print("{:13}".format(cC), end=" ")
