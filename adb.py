@@ -195,13 +195,15 @@ def list_assets(db, filterAssets=[], bDetails=False):
     [ihTBAvg, ihTBQty, ihTBSum], [ihTSAvg, ihTSQty, ihTSSum] = _dba_summary(dbaInHand)  # In hand totals
     print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
     assetsSummaryList = []
+    totalProfitLoss = 0
     for an in atAssetNames:
         if (len(filterAssets) > 0) and (an not in filterAssets):
             continue
         atAssets = dba[dba[:,IDB['NAME']] == an]                # All total of a asset
         ihAssets = dbaInHand[dbaInHand[:,IDB['NAME']] == an]    # In hand of a asset
         prevAssets = atAssets[atAssets[:,IDB['SQTY']] > 0]
-        profitLoss = numpy.sum(prevAssets[:,IDB['STRANSVALUE']] - prevAssets[:,IDB['BTRANSVALUE']])
+        curAssetProfitLoss = numpy.sum(prevAssets[:,IDB['STRANSVALUE']] - prevAssets[:,IDB['BTRANSVALUE']])
+        totalProfitLoss += curAssetProfitLoss
         [atBAvg, atBQty, atBSum], [atSAvg, atSQty, atSSum] = _dba_summary(atAssets)
         [ihBAvg, ihBQty, ihBSum], [ihSAvg, ihSQty, ihSSum] = _dba_summary(ihAssets)
         if bDetails:
@@ -209,11 +211,11 @@ def list_assets(db, filterAssets=[], bDetails=False):
                 t = s.copy()
                 #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
-        assetsSummaryList.append([ an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, profitLoss ])
-        print("{:48} :c: {:10.2f} x {:8} = {:16.2f} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :PL: {:10.2f}".format(an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, profitLoss))
+        assetsSummaryList.append([ an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss ])
+        print("{:48} :c: {:10.2f} x {:8} = {:16.2f} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :PL: {:10.2f}".format(an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss))
         if gbSpaceOutListing:
             print("")
-    print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum))
+    print("GrandSummary:InHand: UniqAssets={:8}, TotalQtys={:8}, TotalInvestedValue={:16.2f} :ProfitLoss:{:16.2f}".format(ihUniqAssetsCnt, ihTBQty, ihTBSum, totalProfitLoss))
     return assetsSummaryList
 
 
