@@ -57,7 +57,8 @@ def symbolmap_append(inMap):
 
 
 def fix_symbol(symbol):
-    if symbol.endswith("-BE"):
+    symSuffix = symbol[-3:]
+    if symSuffix in [ "-BE", "-BZ" ]:
         symbol = symbol[:-3]
     if symbol in SymbolMap:
         symbol = SymbolMap[symbol]
