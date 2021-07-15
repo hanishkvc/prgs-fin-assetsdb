@@ -211,9 +211,13 @@ def list_assets(db, filterAssets=[], bDetails=False):
                 t = s.copy()
                 if type(t[IDB['BTRANSDATE']]) == datetime.datetime:
                     t[IDB['BTRANSDATE']] = t[IDB['BTRANSDATE']].strftime("%Y%m%dIST%H%M")
+                else:
+                    t[IDB['BTRANSDATE']] = '-NA-'
                 if type(t[IDB['STRANSDATE']]) == datetime.datetime:
                     t[IDB['STRANSDATE']] = t[IDB['STRANSDATE']].strftime("%Y%m%dIST%H%M")
-                print("{0[0]:48} {0[1]:12} {0[2]:10.2f} {0[3]:8} {0[4]:16.2f} {0[5]:12} {0[6]:10.2f} {0[7]:8} {0[8]:16.2f}".format(t))
+                else:
+                    t[IDB['STRANSDATE']] = '-NA-'
+                print("{0[0]:48} :b: {0[1]:16} {0[2]:10.2f} {0[3]:8} {0[4]:16.2f} :s: {0[5]:16} {0[6]:10.2f} {0[7]:8} {0[8]:16.2f}".format(t))
         assetsSummaryList.append([ an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss ])
         print("{:48} :c: {:10.2f} x {:8} = {:16.2f} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :PL: {:10.2f}".format(an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss))
         if gbSpaceOutListing:
