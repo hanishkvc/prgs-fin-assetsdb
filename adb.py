@@ -209,7 +209,10 @@ def list_assets(db, filterAssets=[], bDetails=False):
         if bDetails:
             for s in atAssets:
                 t = s.copy()
-                #t[IBS['TRANSDATE']] = t[IBS['TRANSDATE']].strftime("%Y%m%dIST%H%M")
+                if type(t[IDB['BTRANSDATE']]) == datetime.datetime:
+                    t[IDB['BTRANSDATE']] = t[IDB['BTRANSDATE']].strftime("%Y%m%dIST%H%M")
+                if type(t[IDB['STRANSDATE']]) == datetime.datetime:
+                    t[IDB['STRANSDATE']] = t[IDB['STRANSDATE']].strftime("%Y%m%dIST%H%M")
                 print(t)
         assetsSummaryList.append([ an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss ])
         print("{:48} :c: {:10.2f} x {:8} = {:16.2f} :b: {:10.2f} x {:8} :s: {:10.2f} x {:8} :PL: {:10.2f}".format(an, ihBAvg, ihBQty, ihBSum, atBAvg, atBQty, atSAvg, atSQty, curAssetProfitLoss))
