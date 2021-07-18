@@ -4,6 +4,9 @@
 #
 
 
+import re
+
+
 gDEBUGLVLERROR = 0
 gDEBUGLVLWARN = 1
 gDEBUGLVLINFO = 2
@@ -70,4 +73,12 @@ def print_dict(d, msg=None):
         print(msg)
     for k in d:
         print("{}:\n\t{}".format(k,d[k]))
+
+
+def match_any(matchList, theStr):
+    for cM in matchList:
+        if re.match(cM, theStr) != None:
+            return True
+    return False
+
 

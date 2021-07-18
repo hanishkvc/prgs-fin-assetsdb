@@ -8,6 +8,8 @@
 import datetime
 import numpy
 
+from hlpr import *
+
 
 IDB = {
     'NAME': 0,
@@ -141,7 +143,7 @@ def list_assets_bsda(da, filterAssets=[], bDetails=False):
     assetNames = list_assetnames(da, False)
     print("GrandSummary: UniqAssetsCnt={:8}, NumOfAssets={:8}, TotalValue={:16.2f}".format(len(assetNames), totalQty, totalSum))
     for an in assetNames:
-        if (len(filterAssets) > 0) and (an not in filterAssets):
+        if (len(filterAssets) > 0) and (not match_any(filterAssets, an)):
             continue
         assets = da[da[:,IBS['NAME']] == an]
         assetSum, [ assetBuyAvg, assetBuyQty], [assetSellAvg, assetSellQty] = _asset_summary_bsda(assets)
@@ -197,7 +199,7 @@ def list_assets(db, filterAssets=[], bDetails=False):
     assetsSummaryList = []
     totalProfitLoss = 0
     for an in atAssetNames:
-        if (len(filterAssets) > 0) and (an not in filterAssets):
+        if (len(filterAssets) > 0) and (not match_any(filterAssets, an)):
             continue
         atAssets = dba[dba[:,IDB['NAME']] == an]                # All total of a asset
         ihAssets = dbaInHand[dbaInHand[:,IDB['NAME']] == an]    # In hand of a asset
