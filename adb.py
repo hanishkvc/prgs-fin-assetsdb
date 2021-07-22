@@ -34,7 +34,7 @@ IBS = {
 gbSpaceOutListing = True
 
 
-def _import_buy(db, ci):
+def _import_buy_frombegin(db, ci):
     iDT = IDB['BTRANSDATE']
     iRow = -1
     #print(type(db), db.shape, db)
@@ -49,6 +49,22 @@ def _import_buy(db, ci):
         iRow += 1
     db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
     return db
+
+
+def _import_buy_fromend(db, ci):
+    iDT = IDB['BTRANSDATE']
+    iRow = 0
+    iEnd = db.shape[0]-1
+    for i in range(iEnd, -1, -1):
+        if db[i, iDT].timestamp() > ci[iDT].timestamp():
+            continue
+        iRow = i+1
+        break
+    db = numpy.insert(db, iRow, numpy.array([ci[0],ci[1],ci[2],ci[3],ci[4],0,0,0,0]), 0)
+    return db
+
+
+_import_buy = _import_buy_fromend
 
 
 def _import_sell(db, ci):
